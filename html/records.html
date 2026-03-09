@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Records — SAMELCO II</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="page-records">
+  <div class="bg-image" aria-hidden="true"></div>
+  <div class="noise"></div>
+  <div class="orb orb-1"></div>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="nav-logo-icon" aria-hidden="true">
+          <img src="../assets/images/logo.png" alt="SAMELCO II logo" class="nav-logo-img">
+        </span>
+        <span class="nav-logo-text">
+          <span class="nav-logo-title">SAMELCO II</span>
+          <span class="nav-logo-sub">SAMAR ELECTRIC COOPERATIVE, INC.</span>
+        </span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-dots-wrap">
+          <button type="button" class="nav-dots-trigger" aria-label="Menu" aria-expanded="false" aria-haspopup="true" id="nav-dots-btn">
+            <span class="nav-dots-icon">&#9776;</span>
+          </button>
+          <div class="nav-dots-dropdown" id="nav-dots-dropdown">
+           <button type="button" class="nav-dots-item" data-action="home">Home</button>
+            <button type="button" class="nav-dots-item" data-action="records">Records</button>
+            <button type="button" class="nav-dots-item" data-action="analytics">Analytics</button>
+            <button type="button" class="nav-dots-item" data-action="about">About</button>
+            <button type="button" class="nav-dots-item" data-action="contact">Contact</button>
+          </div>
+        </div>
+        <span class="nav-user-welcome">Welcome, <span id="user-name">User</span></span>
+        <button type="button" class="nav-btn nav-btn-cta" id="logout-btn">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="records-section">
+    <div class="records-container">
+      <div class="records-header">
+        <h1 class="records-title">Records</h1>
+        <p class="records-subtitle">Manage and view SAMELCO II records and data</p>
+        <div class="records-total">Total Reports Submitted: <span id="total-reports-count">0</span></div>
+      </div>
+      <div class="records-table-wrap creative-records-wrap" style="margin-top: 2.5rem;">
+        <div class="records-table-header-controls">
+          <div class="records-table-title-group">
+            <h2 class="records-table-title">Consumer Records</h2>
+            <div class="records-table-badge">Live Updates Enabled</div>
+          </div>
+          <div class="records-table-actions">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="records-filter" class="records-filter-input" placeholder="Search records...">
+            </div>
+            <div class="select-wrapper">
+              <select id="mun-filter" class="records-status-filter" title="Filter by municipality">
+                <option value="all">All Municipalities</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <input type="date" id="records-date" class="records-filter-input date-input" title="Show only this date">
+              <input type="month" id="records-month" class="records-filter-input date-input" title="Filter by month">
+              <div class="select-wrapper">
+                <select id="status-filter" class="records-status-filter">
+                  <option value="all">All Statuses</option>
+                  <option value="problems">Issues Only</option>
+                  <option value="restored">Restored Only</option>
+                </select>
+              </div>
+              <div class="select-wrapper">
+                <select id="assigned-filter" class="records-status-filter" title="Filter by assignment">
+                  <option value="all">All Assignment</option>
+                  <option value="assigned">Assigned Only</option>
+                  <option value="unassigned">Unassigned Only</option>
+                </select>
+              </div>
+            </div>
+            <div class="records-quick-badges">
+              <button type="button" id="badge-new" class="records-table-badge records-quick-badge-btn">New Compliance <span id="badge-new-count">0</span></button>
+              <button type="button" id="badge-pending" class="records-table-badge records-quick-badge-btn">Pending <span id="badge-pending-count">0</span></button>
+            </div>
+            <button type="button" id="reset-restored-btn" class="records-export-btn" title="Clear all restored markers">Reset Restored</button>
+            <button type="button" id="clear-filters-btn" class="records-export-btn" title="Clear all filters">Clear Filters</button>
+            <button type="button" id="export-excel-btn" class="records-export-btn">
+              <span class="btn-icon">📥</span> Export Excel
+            </button>
+          </div>
+        </div>
+        <div class="records-table-container">
+          <div id="records-loading" class="records-loading" style="display:none;">Loading records…</div>
+          <div id="records-visible-info" class="records-visible-info">Showing <span id="records-visible-count">0</span> results</div>
+          <div class="records-table" id="consumer-records-table">
+            <div class="records-table-header">
+              <span class="col-queue">Queue No.</span>
+              <span class="col-date">Date</span>
+              <span class="col-contact">Account No.</span>
+              <span class="col-name">Name</span>
+              <span class="col-address">Address</span>
+              <span class="col-status">Issue</span>
+                <span class="col-assigned">Assigned</span>
+              <span class="col-restored">Status</span>
+            </div>
+            <!-- consumer rows will be populated dynamically by records.js -->
+          </div>
+          <div id="records-empty" class="records-empty" style="display:none;">No records match the current filters.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="record-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close-modal" id="close-record-modal">&times;</span>
+      <h2 id="modal-title">Record Details</h2>
+      <ul class="info-list" id="modal-info-list"></ul>
+      <div style="margin-top:1rem; display:flex; gap:0.5rem;">
+        <button type="button" class="records-export-btn" id="copy-address-btn">Copy Address</button>
+        <button type="button" class="records-export-btn" id="view-in-map-btn">View in Map</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/records.js"></script>
+</body>
+</html>

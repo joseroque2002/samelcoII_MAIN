@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard SAMELCO II</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../assets/vendor/leaflet/leaflet.css" />
+  <script src="../assets/vendor/leaflet/leaflet.js"></script>
+</head>
+<body class="page-dashboard">
+  <div class="bg-image" aria-hidden="true"></div>
+  <div class="noise"></div>
+  <div class="orb orb-1"></div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="nav-logo-icon" aria-hidden="true">
+          <img src="../assets/images/logo.png" alt="SAMELCO II logo" class="nav-logo-img">
+        </span>
+        <span class="nav-logo-text">
+          <span class="nav-logo-title">SAMELCO II</span>
+          <span class="nav-logo-sub">SAMAR ELECTRIC COOPERATIVE, INC.</span>
+        </span>
+      </a>
+      <div class="nav-right">
+        <span class="nav-user-welcome">Welcome, <span id="user-name">User</span></span>
+        <div class="notif-wrap" id="notif-wrap">
+          <button type="button" class="notif-btn" id="notif-btn" aria-haspopup="true" aria-expanded="false" title="Notifications">
+            <span class="notif-icon">🔔</span>
+            <span class="notif-badge" id="notif-badge" style="display:none;">0</span>
+          </button>
+          <div class="notif-dropdown" id="notif-dropdown">
+            <div class="notif-header">
+              <div class="notif-head">
+                <span class="notif-head-icon">🔔</span>
+                <div class="notif-head-text">
+                  <div class="notif-head-title">New Reports</div>
+                  <div class="notif-head-sub" id="notif-summary">0 new</div>
+                </div>
+              </div>
+            </div>
+            <div class="notif-branch-pills" id="notif-branch-pills">
+              <button type="button" class="pill is-active" data-branch="">All (0)</button>
+              <button type="button" class="pill" data-branch="Paranas">Paranas (0)</button>
+              <button type="button" class="pill" data-branch="Catbalogan">Catbalogan (0)</button>
+              <button type="button" class="pill" data-branch="Villareal">Villareal (0)</button>
+              <button type="button" class="pill" data-branch="Basey">Basey (0)</button>
+            </div>
+            <div class="notif-filters">
+              <label class="notif-filter">
+                <span>Branch</span>
+                <select id="notif-branch-filter">
+                  <option value="">All</option>
+                  <option>Paranas</option>
+                  <option>Catbalogan</option>
+                  <option>Villareal</option>
+                  <option>Basey</option>
+                </select>
+              </label>
+              <label class="notif-filter">
+                <span>Municipality</span>
+                <select id="notif-muni-filter">
+                  <option value="">All</option>
+                </select>
+              </label>
+            </div>
+            <div class="notif-list" id="notif-list"></div>
+            <div class="notif-empty" id="notif-empty">
+              <div class="empty-card">
+                <div class="empty-emoji">🎉</div>
+                <div class="empty-title">No new reports</div>
+                <div class="empty-sub">You’re all caught up. Enjoy the calm.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="nav-dots-wrap">
+          <button type="button" class="nav-dots-trigger" aria-label="Menu" aria-expanded="false" aria-haspopup="true" id="nav-dots-btn">
+            <span class="nav-dots-icon">&#9776;</span>
+          </button>
+          <div class="nav-dots-dropdown" id="nav-dots-dropdown">
+            <button type="button" class="nav-dots-item" data-action="home">Home</button>
+            <button type="button" class="nav-dots-item" data-action="records">Records</button>
+            <button type="button" class="nav-dots-item" data-action="analytics">Analytics</button>
+            <button type="button" class="nav-dots-item" data-action="etc">About</button>
+            <button type="button" class="nav-dots-item" data-action="contact">Contact</button>
+            <button type="button" class="nav-dots-item" id="logout-btn" data-action="logout">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="map-section" id="map-section">
+    <div class="map-container">
+      <div class="map-header">
+        <h2 class="map-title">Service Coverage Area</h2>
+        <p class="map-subtitle">Explore SAMELCO II Municipalities across Samar</p>
+      </div>
+      <div class="map-content-wrapper">
+        <div class="map-wrapper">
+          <div id="map" class="map-canvas"></div>
+        </div>
+        <div class="municipalities-panel">
+          <h3 class="municipalities-panel-title">MUNICIPALITIES</h3>
+          <p class="municipalities-panel-subtitle">All municipalities and cities in Samar. Click to view barangays.</p>
+          <div class="municipalities-controls">
+            <label class="issues-toggle"><input type="checkbox" id="issues-only-toggle"> Show issues only</label>
+            <span class="issues-summary" id="issues-summary"></span>
+            <button type="button" id="toggle-audit-btn" class="records-export-btn" style="margin-left:auto;">Audit Logs</button>
+          </div>
+          <div id="municipalities-sidebar-list" class="municipalities-list"></div>
+          <div id="audit-logs" style="display:none; margin-top:0.75rem; border:1px solid #111; padding:0.75rem; border-radius:8px; background:#fff;">
+            <div style="font-weight:700; margin-bottom:0.5rem;">Recent Actions</div>
+            <div id="audit-logs-empty" style="color:#555;">No logs yet.</div>
+            <ul id="audit-logs-list" style="list-style:none; padding-left:0; margin:0; max-height:320px; overflow-y:auto; padding-right:6px;"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <div id="alarm-permission" style="position:fixed; right:16px; bottom:16px; z-index:9999; display:none; background:#1a1512; color:#ffd000; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,208,0,0.35); box-shadow:0 8px 24px rgba(0,0,0,0.2);">
+    <span style="margin-right:8px;">🔔 Enable sound alerts</span>
+    <button id="enable-alerts-btn" style="background:#ffd000; color:#1a1512; border:none; border-radius:6px; padding:6px 10px; cursor:pointer;">Enable</button>
+  </div>
+
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

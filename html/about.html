@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About â€” SAMELCO II</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="page-about">
+  <div class="bg-image" aria-hidden="true"></div>
+  <div class="noise"></div>
+  <div class="orb orb-1"></div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="nav-logo-icon" aria-hidden="true">
+          <img src="../assets/images/logo.png" alt="SAMELCO II logo" class="nav-logo-img">
+        </span>
+        <span class="nav-logo-text">
+          <span class="nav-logo-title">SAMELCO II</span>
+          <span class="nav-logo-sub">SAMAR ELECTRIC COOPERATIVE, INC.</span>
+        </span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-dots-wrap">
+          <button type="button" class="nav-dots-trigger" aria-label="Menu" aria-expanded="false" aria-haspopup="true" id="nav-dots-btn">
+            <span class="nav-dots-icon">&#9776;</span>
+          </button>
+          <div class="nav-dots-dropdown" id="nav-dots-dropdown">
+            <button type="button" class="nav-dots-item" data-action="home">Home</button>
+            <button type="button" class="nav-dots-item" data-action="records">Records</button>
+            <button type="button" class="nav-dots-item" data-action="analytics">Analytics</button>
+            <button type="button" class="nav-dots-item" data-action="about">About</button>
+            <button type="button" class="nav-dots-item" data-action="contact">Contact</button>
+          </div>
+        </div>
+        <span class="nav-user-welcome">Welcome, <span id="user-name">User</span></span>
+        <button type="button" class="nav-btn nav-btn-cta" id="logout-btn">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="about-section">
+    <div class="about-container">
+      <h1 class="dashboard-title">About SAMELCO II</h1>
+      <p class="dashboard-subtitle">Powering communities across Samar with safe, reliable, and responsive service.</p>
+
+      <div class="about-banner">
+        <div class="about-banner-copy">
+          <div class="about-banner-title">Committed to Service</div>
+          <div class="about-banner-sub">Serving households and businesses through four branch offices and 26 municipalities.</div>
+        </div>
+        <div class="about-banner-actions">
+          <a class="nav-btn nav-btn-cta" href="user-dashboard.html">Report Issue</a>
+          <a class="nav-btn" href="contact.html">Contact Us</a>
+        </div>
+      </div>
+
+      <div class="about-grid">
+        <section class="about-card">
+          <h3>Vision</h3>
+          <p>A reliable, safe, and sustainable electric service that empowers every community in Samar.</p>
+        </section>
+        <section class="about-card">
+          <h3>Mission</h3>
+          <p>Deliver affordable, dependable, and responsive electric service by investing in people, systems, and partnerships that prioritize safety, customer care, and continuous improvement.</p>
+        </section>
+      </div>
+
+      <div class="about-stats-row">
+        <div class="about-stat-pill" id="municipalities-card">Municipalities <strong>26</strong></div>
+        <div class="about-stat-pill">Branch Offices <strong>4</strong></div>
+        <div class="about-stat-pill">Coverage <strong>Samar Province</strong></div>
+      </div>
+
+      <div class="system-flow">
+        <h2>How Reporting Works</h2>
+        <ol class="flow-list">
+          <li><strong>Messenger Trigger:</strong> The user sends a message to the official Facebook page.</li>
+          <li><strong>Auto Reply with Form Link:</strong> The system automatically replies with a link to the reporting form (<a href="user-dashboard.html">Open report form</a>).</li>
+          <li><strong>Form Submission:</strong> The user fills in their name, contact details, issue description, and exact location.</li>
+          <li><strong>GPS Capture:</strong> The system captures latitude and longitude for accurate location tracking.</li>
+          <li><strong>Data Storage:</strong> The report is saved automatically to the Supabase database.</li>
+          <li><strong>Dashboard Mapping:</strong> Submitted reports appear on the operations dashboard for faster field response.</li>
+        </ol>
+      </div>
+      
+      <!-- Municipalities Modal -->
+      <div id="municipalities-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <span class="close-modal" id="close-municipalities">&times;</span>
+          <h2>26 Municipalities Served</h2>
+          <ul class="info-list">
+            <li>Paranas</li>
+            <li>Catbalogan</li>
+            <li>Villareal</li>
+            <li>Basey</li>
+            <li>Calbayog</li>
+            <li>Gandara</li>
+            <li>Matuguinao</li>
+            <li>San Jorge</li>
+            <li>San Jose de Buan</li>
+            <li>Santa Margarita</li>
+            <li>Tarangnan</li>
+            <li>Almagro</li>
+            <li>Santo NiÃ±o</li>
+            <li>Tagapul-an</li>
+            <li>Pagsanghan</li>
+            <li>Motiong</li>
+            <li>Jiabong</li>
+            <li>Hinabangan</li>
+            <li>Daram</li>
+            <li>Zumarraga</li>
+            <li>Santa Rita</li>
+            <li>Calbiga</li>
+            <li>Pinabacdao</li>
+            <li>Talalora</li>
+            <li>San Sebastian</li>
+            <li>Marabut</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ 
+
+  <script src="../js/about.js"></script>
+</body>
+</html>
