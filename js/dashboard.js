@@ -30,8 +30,82 @@ document.addEventListener('DOMContentLoaded', function () {
     return getUserRole() === 'admin';
   }
   var supabaseCfg = window.SAMELCO_SUPABASE || {};
+  var defaultTeams = ['Line Crew A', 'Line Crew B', 'Maintenance', 'Inspection'];
+  var availableTeams = defaultTeams.slice();
 
-  async function setReportStatusById(reportId, nextStatus) {
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function buildTeamSelectLabelHtml(isLocked) {
+    var selectAttrs = isLocked ? ' disabled aria-disabled="true"' : '';
+    var options = '<option value="">Select team</option>' + availableTeams.map(function(t) {
+      return '<option>' + escapeHtml(t) + '</option>';
+    }).join('');
+    return '<label class="map-popup-label">Team: <select class="team-select map-popup-select"' + selectAttrs + '>' + options + '</select></label>';
+  }
+
+  function isPendingAssignmentLocked(row) {
+    if (!row || isResolvedRow(row)) return false;
+    if (getAssignedTeamForRow(row)) return true;
+    return getStatusKey(row) === 'ontheway';
+  }
+
+  function buildPendingAssignButtonHtml(row, isRestored) {
+    if (!canManage() || isRestored) return '';
+    var locked = isPendingAssignmentLocked(row);
+    var attrs = locked ? ' disabled aria-disabled="true"' : '';
+    var label = locked ? 'Pending Started' : 'Set Pending';
+    return '<button type="button" class="pending-assign map-popup-btn map-popup-btn-warning"' + attrs + '>' + label + '</button>';
+  }
+
+  function lockPendingAssignControls(container, teamName) {
+    if (!container) return;
+    var normalizedTeam = String(teamName || '').trim();
+    var btn = container.querySelector('.pending-assign');
+    if (btn) {
+      btn.disabled = true;
+      btn.setAttribute('aria-disabled', 'true');
+      btn.textContent = 'Pending Started';
+    }
+    var teamSelectEl = container.querySelector('.team-select');
+    if (teamSelectEl) {
+      if (normalizedTeam) teamSelectEl.value = normalizedTeam;
+      teamSelectEl.disabled = true;
+      teamSelectEl.setAttribute('aria-disabled', 'true');
+    }
+  }
+
+  async function loadTeamsFromSupabase() {
+    if (!supabaseCfg.url || !supabaseCfg.anonKey) return;
+    try {
+      var res = await fetch(supabaseCfg.url + '/rest/v1/teams?select=name&is_active=eq.true&order=name.asc', {
+        headers: {
+          apikey: supabaseCfg.anonKey,
+          Authorization: 'Bearer ' + supabaseCfg.anonKey
+        }
+      });
+      if (!res.ok) return;
+      var rows = await res.json();
+      var names = (Array.isArray(rows) ? rows : [])
+        .map(function(r){ return String((r && r.name) || '').trim(); })
+        .filter(Boolean);
+      if (names.length) availableTeams = names;
+    } catch (_) {}
+  }
+
+  function getTeamForStatusUpdate(row, teamSelectEl) {
+    var selectedTeam = teamSelectEl ? String(teamSelectEl.value || '').trim() : '';
+    if (selectedTeam) return selectedTeam;
+    return getAssignedTeamForRow(row);
+  }
+
+  async function setReportStatusById(reportId, nextStatus, teamName) {
     if (!supabaseCfg.url || !supabaseCfg.anonKey || !supabaseCfg.reportsTable) {
       throw new Error('Missing Supabase config');
     }
@@ -42,6 +116,35 @@ document.addEventListener('DOMContentLoaded', function () {
     var patchBody = (normalized === 'resolved')
       ? { status: 'resolved', resolved_at: new Date().toISOString() }
       : { status: normalized, resolved_at: null };
+    var normalizedTeam = String(teamName || '').trim();
+    if (normalizedTeam) {
+      patchBody.assigned_team = normalizedTeam;
+    }
+    var rpcMissing = false;
+    try {
+      var rpcRes = await fetch(supabaseCfg.url + '/rest/v1/rpc/set_report_status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: supabaseCfg.anonKey,
+          Authorization: 'Bearer ' + supabaseCfg.anonKey
+        },
+        body: JSON.stringify({
+          p_report_id: Number(reportId),
+          p_status: normalized,
+          p_team_name: normalizedTeam || null
+        })
+      });
+      if (rpcRes.ok) return;
+      var rpcText = '';
+      try { rpcText = (await rpcRes.text()) || ''; } catch (_) {}
+      if (rpcRes.status !== 404) {
+        throw new Error('Failed to update report status (RPC HTTP ' + rpcRes.status + ')' + (rpcText ? ': ' + rpcText : ''));
+      }
+      rpcMissing = true;
+    } catch (err) {
+      if (!rpcMissing) throw err;
+    }
     var res = await fetch(supabaseCfg.url + '/rest/v1/' + supabaseCfg.reportsTable + '?id=eq.' + encodeURIComponent(reportId), {
       method: 'PATCH',
       headers: {
@@ -55,7 +158,57 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!res.ok) {
       var responseText = '';
       try { responseText = (await res.text()) || ''; } catch (_) {}
+      if (rpcMissing && (res.status === 401 || res.status === 403)) {
+        throw new Error('Missing set_report_status RPC in Supabase. Run sql/migrations/20260311_set_report_status_function.sql.');
+      }
       throw new Error('Failed to update report status (HTTP ' + res.status + ')' + (responseText ? ': ' + responseText : ''));
+    }
+  }
+
+  async function setReportAssignedTeamById(reportId, teamName) {
+    if (!supabaseCfg.url || !supabaseCfg.anonKey || !supabaseCfg.reportsTable) {
+      throw new Error('Missing Supabase config');
+    }
+    var normalizedTeam = String(teamName || '').trim();
+    if (!normalizedTeam) {
+      throw new Error('Team name is required');
+    }
+    var rpcOk = false;
+    try {
+      var rpcRes = await fetch(supabaseCfg.url + '/rest/v1/rpc/assign_report_team', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: supabaseCfg.anonKey,
+          Authorization: 'Bearer ' + supabaseCfg.anonKey
+        },
+        body: JSON.stringify({ p_report_id: Number(reportId), p_team_name: normalizedTeam })
+      });
+      if (rpcRes.ok) rpcOk = true;
+      else {
+        var rpcText = '';
+        try { rpcText = (await rpcRes.text()) || ''; } catch (_) {}
+        if (rpcRes.status !== 404) {
+          throw new Error('Failed to assign team (RPC HTTP ' + rpcRes.status + ')' + (rpcText ? ': ' + rpcText : ''));
+        }
+      }
+    } catch (_) {}
+    if (rpcOk) return;
+    var patchBody = { assigned_team: normalizedTeam, status: 'ontheway', resolved_at: null };
+    var res = await fetch(supabaseCfg.url + '/rest/v1/' + supabaseCfg.reportsTable + '?id=eq.' + encodeURIComponent(reportId), {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: supabaseCfg.anonKey,
+        Authorization: 'Bearer ' + supabaseCfg.anonKey,
+        Prefer: 'return=representation'
+      },
+      body: JSON.stringify(patchBody)
+    });
+    if (!res.ok) {
+      var responseText = '';
+      try { responseText = (await res.text()) || ''; } catch (_) {}
+      throw new Error('Failed to assign team (HTTP ' + res.status + ')' + (responseText ? ': ' + responseText : ''));
     }
   }
 
@@ -64,6 +217,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!msg) return 'Failed to update status for this report entry.';
     if (/Missing Supabase config/i.test(msg)) {
       return 'Cannot update status because Supabase config is missing on this page.';
+    }
+    if (/set_report_status/i.test(msg) && /missing|404|run sql\/migrations\/20260311_set_report_status_function\.sql/i.test(msg)) {
+      return 'Status update RPC is missing in Supabase. Run sql/migrations/20260311_set_report_status_function.sql.';
     }
     if (/HTTP 401|HTTP 403/i.test(msg)) {
       return 'Status update was denied (401/403). Check Supabase RLS policy and API key permissions.';
@@ -466,6 +622,58 @@ document.addEventListener('DOMContentLoaded', function () {
   var alarmEl = document.getElementById('alarm-audio');
   var alarmPerm = document.getElementById('alarm-permission');
   var enableAlertsBtn = document.getElementById('enable-alerts-btn');
+  var alertsToggle = document.getElementById('sound-alerts-toggle');
+  var alarmPrimed = false;
+  function resetAlarmElement() {
+    if (!alarmEl) return;
+    try {
+      alarmEl.pause();
+      alarmEl.currentTime = 0;
+      alarmEl.muted = false;
+      alarmEl.volume = 1;
+    } catch (e) {}
+  }
+  function stopAlarmClip() {
+    resetAlarmElement();
+  }
+  function primeAlarmAudio() {
+    if (!alarmEl || typeof alarmEl.play !== 'function') return;
+    try {
+      alarmEl.currentTime = 0;
+      alarmEl.muted = true;
+      alarmEl.volume = 1;
+    } catch (e) {}
+    var playPromise = null;
+    try {
+      playPromise = alarmEl.play();
+    } catch (e) {
+      resetAlarmElement();
+      return;
+    }
+    if (playPromise && typeof playPromise.then === 'function') {
+      playPromise.then(function() {
+        alarmPrimed = true;
+        resetAlarmElement();
+      }).catch(function() {
+        resetAlarmElement();
+      });
+      return;
+    }
+    alarmPrimed = true;
+    resetAlarmElement();
+  }
+  function setAlertsEnabled(next) {
+    alertsEnabled = !!next;
+    localStorage.setItem('alertsEnabled', alertsEnabled ? '1' : '0');
+    if (alertsToggle) alertsToggle.checked = alertsEnabled;
+    if (alertsEnabled) {
+      if (alarmPerm) alarmPerm.style.display = 'none';
+      primeAlarmAudio();
+    } else {
+      stopAlarmClip();
+      if (alarmPerm) alarmPerm.style.display = 'none';
+    }
+  }
   function initAlarmSource() {
     if (!alarmEl) return;
     var candidates = ['../assest/audio/alarm.mp3', '../assets/audio/alarm.mp3'];
@@ -484,23 +692,30 @@ document.addEventListener('DOMContentLoaded', function () {
     tryNext();
   }
   initAlarmSource();
+  if (alertsToggle) {
+    alertsToggle.checked = alertsEnabled;
+    alertsToggle.addEventListener('change', function() {
+      setAlertsEnabled(!!alertsToggle.checked);
+    });
+  }
   if (enableAlertsBtn) {
     enableAlertsBtn.addEventListener('click', function() {
-      alertsEnabled = true;
-      localStorage.setItem('alertsEnabled', '1');
-      if (alarmPerm) alarmPerm.style.display = 'none';
-      // prime audio by a user gesture
-      if (alarmEl && alarmEl.pause) {
-        try { alarmEl.currentTime = 0; alarmEl.play().then(function(){ alarmEl.pause(); }); } catch(e){}
-      }
+      setAlertsEnabled(true);
     });
   }
   function showEnableBanner() {
-    if (alarmPerm && !alertsEnabled) alarmPerm.style.display = 'flex';
+    if (alarmPerm) alarmPerm.style.display = 'flex';
   }
+  function armAlarmOnGesture() {
+    if (!alertsEnabled || alarmPrimed) return;
+    primeAlarmAudio();
+  }
+  window.addEventListener('pointerdown', armAlarmOnGesture, { passive: true });
+  window.addEventListener('keydown', armAlarmOnGesture, { passive: true });
   function simpleBeep(times) {
     try {
       var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (ctx && typeof ctx.resume === 'function') ctx.resume();
       var duration = 0.15;
       var t = ctx.currentTime;
       for (var i=0;i<(times||1);i++) {
@@ -517,63 +732,238 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     } catch(e){}
   }
+  function playAlarmClip() {
+    if (!alarmEl || typeof alarmEl.play !== 'function') {
+      simpleBeep(3);
+      showEnableBanner();
+      return;
+    }
+    try {
+      alarmEl.muted = false;
+      alarmEl.volume = 1;
+      alarmEl.currentTime = 0;
+    } catch (e) {}
+    var playPromise = null;
+    try {
+      playPromise = alarmEl.play();
+    } catch (e) {
+      simpleBeep(3);
+      showEnableBanner();
+      return;
+    }
+    if (playPromise && typeof playPromise.then === 'function') {
+      playPromise.then(function() {
+        alarmPrimed = true;
+      }).catch(function() {
+        simpleBeep(3);
+        showEnableBanner();
+      });
+      return;
+    }
+    alarmPrimed = true;
+  }
   var lastNewCount = -1;
+  var lastLatestReportMs = -1;
+  var lastLatestReportId = '';
   var alarmInitialized = false;
   function triggerAlarmIfActive(rows) {
     if (!Array.isArray(rows)) return;
     var counts = { new: 0, pending: 0 };
+    var latestMs = -1;
+    var latestId = '';
     rows.forEach(function(r){
       var n = r.name || 'Unknown';
       if (isResolvedRow(r)) return;
       var b = resolveBarangayForReport(r) || r.barangay || '';
       if (!isDbPendingRow(r) && isBarangayRestored(n, b)) return;
-      var assignedTeam = getAssignedTeam(n);
+      var assignedTeam = getAssignedTeamForRow(r);
       if (assignedTeam) counts.pending += 1;
       else if (isNewComplianceRow(r)) counts.new += 1;
       else counts.pending += 1;
+      var ms = Date.parse(r.createdAt || '');
+      if (isFinite(ms)) {
+        var rid = String(r.id || '');
+        if (ms > latestMs || (ms === latestMs && rid > latestId)) {
+          latestMs = ms;
+          latestId = rid;
+        }
+      }
     });
     var newCount = counts.new;
     if (!alarmInitialized) {
       alarmInitialized = true;
       lastNewCount = newCount;
+      lastLatestReportMs = latestMs;
+      lastLatestReportId = latestId;
       return;
     }
-    if (newCount <= lastNewCount) {
-      lastNewCount = newCount; // update downward silently
+    var shouldAlarm = false;
+    if (newCount > lastNewCount) shouldAlarm = true;
+    if (latestMs > lastLatestReportMs) shouldAlarm = true;
+    if (latestMs === lastLatestReportMs && latestMs >= 0 && latestId && latestId > lastLatestReportId) shouldAlarm = true;
+
+    if (newCount < lastNewCount) lastNewCount = newCount;
+    if (latestMs < lastLatestReportMs) {
+      lastLatestReportMs = latestMs;
+      lastLatestReportId = latestId;
+    }
+    if (!shouldAlarm) {
+      lastNewCount = newCount;
+      lastLatestReportMs = latestMs;
+      lastLatestReportId = latestId;
       return;
     }
     lastNewCount = newCount;
+    lastLatestReportMs = latestMs;
+    lastLatestReportId = latestId;
     if (!alertsEnabled) { showEnableBanner(); return; }
-    var played = false;
-    if (alarmEl && typeof alarmEl.play === 'function') {
-      try {
-        alarmEl.currentTime = 0;
-        alarmEl.play();
-        played = true;
-      } catch (e) {
-        played = false;
-      }
-    }
-    if (!played) {
-      simpleBeep(3);
-      showEnableBanner();
-    }
+    playAlarmClip();
   }
   function playAlarmNowFromLink() {
-    var played = false;
-    if (alarmEl && typeof alarmEl.play === 'function') {
-      try {
-        alarmEl.currentTime = 0;
-        alarmEl.play();
-        played = true;
-      } catch (e) {
-        played = false;
+    playAlarmClip();
+  }
+  var urgentModalEl = document.getElementById('urgent-report-modal');
+  var urgentModalListEl = document.getElementById('urgent-report-info-list');
+  var urgentModalTitleEl = document.getElementById('urgent-report-title');
+  var urgentModalSubtitleEl = document.getElementById('urgent-report-subtitle');
+  var urgentModalCloseEl = document.getElementById('close-urgent-report-modal');
+  var urgentModalDismissBtn = document.getElementById('urgent-report-dismiss-btn');
+  var urgentModalViewBtn = document.getElementById('urgent-report-view-btn');
+  var activeUrgentReport = null;
+  var urgentReportsInitialized = false;
+
+  function readSeenUrgentReportIds() {
+    try {
+      var raw = JSON.parse(localStorage.getItem('seenUrgentReportIds') || '[]');
+      return Array.isArray(raw) ? raw.map(function(v){ return String(v); }) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function writeSeenUrgentReportIds(ids) {
+    try {
+      var unique = Array.from(new Set((ids || []).map(function(v){ return String(v); }))).slice(-500);
+      localStorage.setItem('seenUrgentReportIds', JSON.stringify(unique));
+    } catch (e) {}
+  }
+
+  function markUrgentReportSeen(reportId) {
+    if (!reportId) return;
+    var ids = readSeenUrgentReportIds();
+    var key = String(reportId);
+    if (ids.indexOf(key) === -1) {
+      ids.push(key);
+      writeSeenUrgentReportIds(ids);
+    }
+  }
+
+  function openUrgentReportOnMap(report) {
+    if (!report) return;
+    var mk = reportMarkersById[String(report.id)] || null;
+    if (!mk) {
+      var key = (report.name || '').toLowerCase() + '|' + normalizeBarangayName(report.barangay || '');
+      mk = reportMarkersIndex[key] || null;
+    }
+    if (!mk || !window.map) return;
+    var ll = mk.getLatLng();
+    window.map.setView(ll, 13);
+    mk.openPopup();
+  }
+
+  function closeUrgentReportModal() {
+    activeUrgentReport = null;
+    stopAlarmClip();
+    if (urgentModalEl) urgentModalEl.style.display = 'none';
+  }
+
+  function renderUrgentReportModal(report) {
+    if (!urgentModalEl || !urgentModalListEl || !report) return;
+    activeUrgentReport = report;
+    var qVal = Number.isFinite(Number(report.queueNumber)) && Number(report.queueNumber) > 0
+      ? Number(report.queueNumber)
+      : ((window._queueOrderById && window._queueOrderById[report.id]) ? window._queueOrderById[report.id] : null);
+    if (urgentModalTitleEl) {
+      urgentModalTitleEl.textContent = (report.issue || 'Urgent report') + ' in ' + (report.name || 'Unknown location');
+    }
+    if (urgentModalSubtitleEl) {
+      urgentModalSubtitleEl.textContent = 'Urgent issue reported by ' + (report.fullName || 'Unknown reporter') + '. Dispatch a team immediately.';
+    }
+    urgentModalListEl.innerHTML = '';
+    [
+      { label: 'Queue Number', value: qVal ? ('#' + qVal) : 'Processing' },
+      { label: 'Municipality', value: report.name || 'Unknown' },
+      { label: 'Barangay', value: report.barangay || 'Not specified' },
+      { label: 'Location', value: getReportLocationText(report) || 'No location provided' },
+      { label: 'Reporter', value: report.fullName || 'Unknown reporter' },
+      { label: 'Contact', value: report.contact || 'No contact provided' },
+      { label: 'Status', value: isResolvedRow(report) ? 'Resolved' : (isOnTheWayRow(report) ? 'On The Way' : 'Pending') },
+      { label: 'Assigned Team', value: getAssignedTeamForRow(report) || 'Not assigned yet' },
+      { label: 'Submitted', value: report.createdAt ? new Date(report.createdAt).toLocaleString() : 'Just now' }
+    ].forEach(function(item) {
+      var li = document.createElement('li');
+      li.innerHTML = '<strong>' + escapeHtml(item.label) + ':</strong> <span>' + escapeHtml(item.value) + '</span>';
+      urgentModalListEl.appendChild(li);
+    });
+    urgentModalEl.style.display = 'block';
+    playAlarmNowFromLink();
+  }
+
+  function maybeShowUrgentReportModal(rows) {
+    if (!Array.isArray(rows)) return;
+    if (activeUrgentReport) return;
+    var eligible = rows.filter(function(r) {
+      if (!r || isResolvedRow(r) || !isUrgentRow(r)) return false;
+      var b = resolveBarangayForReport(r) || r.barangay || '';
+      if (isPinHidden(r.name || '', b, r.id)) return false;
+      return true;
+    }).sort(function(a, b) {
+      var ta = Date.parse(a.createdAt || '') || 0;
+      var tb = Date.parse(b.createdAt || '') || 0;
+      return tb - ta;
+    });
+    var seenIds = readSeenUrgentReportIds();
+    var nextUrgent = eligible.find(function(r) {
+      return seenIds.indexOf(String(r.id || '')) === -1;
+    });
+    if (!urgentReportsInitialized) {
+      urgentReportsInitialized = true;
+      if (!nextUrgent) return;
+      if (!seenIds.length) {
+        eligible.forEach(function(r) {
+          var rid = String(r.id || '');
+          if (rid && seenIds.indexOf(rid) === -1) seenIds.push(rid);
+        });
+        writeSeenUrgentReportIds(seenIds);
+        renderUrgentReportModal(nextUrgent);
+        return;
       }
     }
-    if (!played) {
-      simpleBeep(3);
-      showEnableBanner();
-    }
+    if (!nextUrgent) return;
+    markUrgentReportSeen(nextUrgent.id);
+    renderUrgentReportModal(nextUrgent);
+  }
+
+  if (urgentModalCloseEl) {
+    urgentModalCloseEl.addEventListener('click', function() {
+      closeUrgentReportModal();
+    });
+  }
+  if (urgentModalDismissBtn) {
+    urgentModalDismissBtn.addEventListener('click', function() {
+      closeUrgentReportModal();
+    });
+  }
+  if (urgentModalViewBtn) {
+    urgentModalViewBtn.addEventListener('click', function() {
+      if (activeUrgentReport) openUrgentReportOnMap(activeUrgentReport);
+      closeUrgentReportModal();
+    });
+  }
+  if (urgentModalEl) {
+    urgentModalEl.addEventListener('click', function(e) {
+      if (e.target === urgentModalEl) closeUrgentReportModal();
+    });
   }
 
   // Deprecated municipality-wide restore state. Kept only for backward compatibility.
@@ -588,6 +978,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   function normalizeAssignedTeam(team) {
     return String(team || '').trim();
+  }
+  function getAssignedTeamForRow(row) {
+    return normalizeAssignedTeam(row && (row.assignedTeam || row.assigned_team));
   }
   function setAssignedTeam(name, team) {
     if (!name) return;
@@ -694,7 +1087,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   function isNewComplianceRow(r) {
     if (!r || isResolvedRow(r)) return false;
-    return !getAssignedTeam(r.name || '');
+    return !getAssignedTeamForRow(r);
   }
   function isUrgentRow(r) {
     if (!r) return false;
@@ -731,7 +1124,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!older) return false;
     var b = resolveBarangayForReport(r) || r.barangay || '';
     if (!isDbPendingRow(r) && isBarangayRestored(r.name || '', b)) return false;
-    var assignedTeam = getAssignedTeam(r.name || '');
+    var assignedTeam = getAssignedTeamForRow(r);
     return !assignedTeam;
   }
 
@@ -776,9 +1169,10 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         } catch(e){}
         var statusLine = '<div class="map-popup-status" style="color:' + statusColor + ';">Status: ' + statusText + '</div>' + (slaBadge ? ('<div class="map-popup-note">' + slaBadge + '</div>') : '');
-        var teamSel = canManage() ? '<label class="map-popup-label">Team: <select class="team-select map-popup-select"><option value="">Select team</option><option>Line Crew A</option><option>Line Crew B</option><option>Maintenance</option><option>Inspection</option></select></label>' : '';
-        var assigned = getAssignedTeam(m.name);
-        var manageAssign = canManage() && !isRestored ? '<button type="button" class="pending-assign map-popup-btn map-popup-btn-warning">Set Pending</button>' : '';
+        var pendingLocked = isPendingAssignmentLocked(problem);
+        var teamSel = canManage() ? buildTeamSelectLabelHtml(pendingLocked) : '';
+        var assigned = getAssignedTeamForRow(problem);
+        var manageAssign = buildPendingAssignButtonHtml(problem, isRestored);
         var problemLocation = getReportLocationText(problem);
         var routeHref = buildRouteHref(problem);
         var routeLine = (isOnTheWayRow(problem) && !isRestored)
@@ -817,8 +1211,11 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         }
         if (teamSelectEl) {
-          var assignedTeam = getAssignedTeam(m.name);
+          var assignedTeam = getAssignedTeamForRow(problem);
           if (assignedTeam) teamSelectEl.value = assignedTeam;
+        }
+        if (isPendingAssignmentLocked(problem)) {
+          lockPendingAssignControls(container, getAssignedTeamForRow(problem));
         }
         if (container && container.getAttribute('data-popup-actions-bound') !== '1') {
           container.setAttribute('data-popup-actions-bound', '1');
@@ -826,6 +1223,7 @@ document.addEventListener('DOMContentLoaded', function () {
           var onAction = async function(ev) {
             var tgt = ev && ev.target && ev.target.closest ? ev.target.closest('button, a') : null;
             if (!tgt || !container.contains(tgt)) return;
+            if (tgt.disabled || tgt.getAttribute('aria-disabled') === 'true') return;
             if (!tgt.classList.contains('pending-assign') &&
                 !tgt.classList.contains('show-route-map') &&
                 !tgt.classList.contains('resolve-toggle-row') &&
@@ -846,23 +1244,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 t = 'Line Crew A';
                 teamSelectEl.value = t;
               }
-              setAssignedTeam(m.name, t);
               if (problem && problem.id) {
-                try { await setReportStatusById(problem.id, 'ontheway'); } catch (err) {
+                try { await setReportAssignedTeamById(problem.id, t); } catch (err) {
                   console.error(err);
                   alert(buildStatusUpdateErrorMessage(err));
                   return;
                 }
               }
+              lockPendingAssignControls(container, t);
               clearRouteLine();
               drawRouteFromAdminTo(Number(problem.latitude || m.lat), Number(problem.longitude || m.lng));
-              if (window._dashboardLocations) {
-                renderMunicipalityMarkers(window._dashboardLocations);
-                renderReportMarkers(window._dashboardLocations);
-                updateSidebarBadges(window._dashboardLocations);
-                updateBarangayHighlights(window._dashboardLocations);
-                rebuildActiveNotifications(window._dashboardLocations);
-              }
+              loadReportsFromSupabase();
               return;
             }
             if (tgt.classList.contains('show-route-map')) {
@@ -873,7 +1265,8 @@ document.addEventListener('DOMContentLoaded', function () {
               if (!canManage() || !problem || !problem.id) return;
               try {
                 var nextStatus = isResolvedRow(problem) ? 'pending' : 'resolved';
-                await setReportStatusById(problem.id, nextStatus);
+                var teamForSave = getTeamForStatusUpdate(problem, teamSelectEl);
+                await setReportStatusById(problem.id, nextStatus, teamForSave);
                 if (String(nextStatus).toLowerCase() === 'resolved') clearRouteLine();
                 loadReportsFromSupabase();
               } catch (err) {
@@ -1025,7 +1418,8 @@ document.addEventListener('DOMContentLoaded', function () {
       queueNumber: Number(row.queue_number || row.queueNumber || NaN),
       createdAt: row.created_at || row.createdAt || row.created || '',
       status: row.status || 'pending',
-      isUrgent: isUrgentRow(row)
+      isUrgent: isUrgentRow(row),
+      assignedTeam: row.assigned_team || row.assignedTeam || ''
     };
   }
 
@@ -1038,6 +1432,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var notifBranchSel = document.getElementById('notif-branch-filter');
   var notifMuniSel = document.getElementById('notif-muni-filter');
   var notifBranchPills = document.getElementById('notif-branch-pills');
+  var clearAllBtn = document.getElementById('notif-clear-all');
   // populate municipalities into notif muni filter
   if (notifMuniSel && Array.isArray(municipalities)) {
     var existing = Array.from(notifMuniSel.options).map(function(o){ return o.value; });
@@ -1105,6 +1500,16 @@ document.addEventListener('DOMContentLoaded', function () {
       initBtn.classList.add('is-active');
     }
   }
+  function getReadNotifIds() {
+    try {
+      var raw = localStorage.getItem('readNotifIds');
+      var arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function setReadNotifIds(ids) {
+    try { localStorage.setItem('readNotifIds', JSON.stringify(Array.from(new Set(ids)).slice(-4000))); } catch(e){}
+  }
   function toggleNotif(open) {
     if (!notifDropdown || !notifBtn) return;
     var isOpen = typeof open === 'boolean' ? open : !notifDropdown.classList.contains('is-open');
@@ -1114,6 +1519,19 @@ document.addEventListener('DOMContentLoaded', function () {
   if (notifBtn) {
     notifBtn.addEventListener('click', function(e){ e.stopPropagation(); toggleNotif(); });
     document.addEventListener('click', function(){ toggleNotif(false); });
+  }
+  if (clearAllBtn) {
+    clearAllBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      var read = getReadNotifIds();
+      (window._lastNewRows || []).forEach(function(r){
+        var id = String(r.id);
+        if (read.indexOf(id) === -1) read.push(id);
+      });
+      setReadNotifIds(read);
+      setActiveNotifIds([]);
+      rebuildActiveNotifications(window._dashboardLocations || []);
+    });
   }
   function getActiveNotifIds() {
     try {
@@ -1135,6 +1553,8 @@ document.addEventListener('DOMContentLoaded', function () {
       if (isPinHidden(n, b, r.id)) return false;
       return isNewComplianceRow(r);
     });
+    var readIds = getReadNotifIds();
+    eligible = eligible.filter(function(r){ return readIds.indexOf(String(r.id)) === -1; });
     var idToRow = {};
     eligible.forEach(function(r){ idToRow[String(r.id)] = r; });
     var ids = getActiveNotifIds();
@@ -1281,6 +1701,22 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       rightCol.appendChild(timeEl);
       rightCol.appendChild(viewBtn);
+      var dismissBtn = document.createElement('button');
+      dismissBtn.type = 'button';
+      dismissBtn.className = 'notif-dismiss-btn';
+      dismissBtn.textContent = 'Dismiss';
+      dismissBtn.addEventListener('click', function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        var read = getReadNotifIds();
+        var id = String(r.id);
+        if (read.indexOf(id) === -1) read.push(id);
+        setReadNotifIds(read);
+        var active = getActiveNotifIds().filter(function(x){ return String(x) !== id; });
+        setActiveNotifIds(active);
+        rebuildActiveNotifications(window._dashboardLocations || []);
+      });
+      rightCol.appendChild(dismissBtn);
       div.appendChild(leftCol);
       div.appendChild(rightCol);
       div.addEventListener('click', function(ev){
@@ -1344,7 +1780,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       var isRestored = isResolvedRow(r);
       var statusKey = getStatusKey(r);
-      var assignedTeam = getAssignedTeam(r.name);
+      var assignedTeam = getAssignedTeamForRow(r);
       var iconForRow = isRestored ? restoredIcon : (statusKey === 'ontheway' ? pendingIcon : newIcon);
       if (isParanasRow) iconForRow = restoredIcon;
       var marker = L.marker([lat, lng], { icon: iconForRow }).addTo(reportMarkersLayer);
@@ -1372,7 +1808,8 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         } catch(e){}
       }
-      var teamSelRow = (isRestored || !canManage()) ? '' : '<label class="map-popup-label">Team: <select class="team-select map-popup-select"><option value=\"\">Select team</option><option>Line Crew A</option><option>Line Crew B</option><option>Maintenance</option><option>Inspection</option></select></label><button type=\"button\" class=\"pending-assign map-popup-btn map-popup-btn-warning\">Set Pending</button>';
+      var pendingLockedRow = isPendingAssignmentLocked(r);
+      var teamSelRow = (isRestored || !canManage()) ? '' : (buildTeamSelectLabelHtml(pendingLockedRow) + buildPendingAssignButtonHtml(r, isRestored));
       var resolveToggleClass = isRestored ? 'map-popup-btn-warning' : 'map-popup-btn-success';
       var resolveToggleRow = canManage() ? ('<button type="button" class="resolve-toggle-row map-popup-btn ' + resolveToggleClass + '">' + (isRestored ? 'Mark as Pending' : 'Mark as Resolved') + '</button>') : '';
       var assignedRow = assignedTeam;
@@ -1411,8 +1848,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         var teamSelectEl = container.querySelector('.team-select');
         if (teamSelectEl) {
-          var assignedTeam = getAssignedTeam(r.name);
+          var assignedTeam = getAssignedTeamForRow(r);
           if (assignedTeam) teamSelectEl.value = assignedTeam;
+        }
+        if (isPendingAssignmentLocked(r)) {
+          lockPendingAssignControls(container, getAssignedTeamForRow(r));
         }
         if (container && container.getAttribute('data-popup-actions-bound') !== '1') {
           container.setAttribute('data-popup-actions-bound', '1');
@@ -1420,6 +1860,7 @@ document.addEventListener('DOMContentLoaded', function () {
           var onAction = async function(ev) {
             var tgt = ev && ev.target && ev.target.closest ? ev.target.closest('button, a') : null;
             if (!tgt || !container.contains(tgt)) return;
+            if (tgt.disabled || tgt.getAttribute('aria-disabled') === 'true') return;
             if (!tgt.classList.contains('pending-assign') &&
                 !tgt.classList.contains('show-route-map') &&
                 !tgt.classList.contains('resolve-toggle-row') &&
@@ -1440,19 +1881,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 t = 'Line Crew A';
                 teamSelectEl.value = t;
               }
-              setAssignedTeam(r.name, t);
-              try { await setReportStatusById(r.id, 'ontheway'); } catch (err) {
+              try { await setReportAssignedTeamById(r.id, t); } catch (err) {
                 console.error(err);
                 alert(buildStatusUpdateErrorMessage(err));
                 return;
               }
+              lockPendingAssignControls(container, t);
               clearRouteLine();
               drawRouteFromAdminTo(lat, lng);
-              if (window._dashboardLocations) {
-                renderMunicipalityMarkers(window._dashboardLocations);
-                renderReportMarkers(window._dashboardLocations);
-                rebuildActiveNotifications(window._dashboardLocations);
-              }
+              loadReportsFromSupabase();
               return;
             }
             if (tgt.classList.contains('hide-pin')) {
@@ -1490,7 +1927,8 @@ document.addEventListener('DOMContentLoaded', function () {
               if (!canManage()) return;
               try {
                 var nextStatus = isResolvedRow(r) ? 'pending' : 'resolved';
-                await setReportStatusById(r.id, nextStatus);
+                var teamForSave = getTeamForStatusUpdate(r, teamSelectEl);
+                await setReportStatusById(r.id, nextStatus, teamForSave);
                 if (String(nextStatus).toLowerCase() === 'resolved') clearRouteLine();
                 loadReportsFromSupabase();
               } catch (err) {
@@ -1603,6 +2041,7 @@ document.addEventListener('DOMContentLoaded', function () {
       applyIssuesFilter();
       rebuildActiveNotifications(normalized);
       triggerAlarmIfActive(normalized);
+      maybeShowUrgentReportModal(normalized);
       if (_forceAlarmFromUrl) {
         _forceAlarmFromUrl = false;
         playAlarmNowFromLink();
@@ -1617,8 +2056,10 @@ document.addEventListener('DOMContentLoaded', function () {
   localStorage.setItem('problemLocations', JSON.stringify([]));
   renderMunicipalityMarkers([]);
   window.map = map;
-  loadReportsFromSupabase();
-  setInterval(function(){ loadReportsFromSupabase(); }, 30000);
+  loadTeamsFromSupabase().finally(function() {
+    loadReportsFromSupabase();
+    setInterval(function(){ loadReportsFromSupabase(); }, 30000);
+  });
 
   function updateSidebarBadges(rows) {
     var list = document.getElementById('municipalities-sidebar-list');
@@ -1632,7 +2073,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!isDbPendingRow(r) && isBarangayRestored(n, bCand)) return;
       if (!byNameNew[n]) byNameNew[n] = 0;
       if (!byNamePending[n]) byNamePending[n] = 0;
-      var assignedTeam = getAssignedTeam(n);
+      var assignedTeam = getAssignedTeamForRow(r);
       if (assignedTeam) byNamePending[n] += 1;
       else if (isNewComplianceRow(r)) byNameNew[n] += 1;
       else byNamePending[n] += 1;
@@ -1728,7 +2169,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isResolvedRow(r)) return;
         var b = resolveBarangayForReport(r) || r.barangay || '';
         if (!isDbPendingRow(r) && isBarangayRestored(m, b)) return;
-        var assignedTeam = getAssignedTeam(m);
         if (isNewComplianceRow(r)) newRows.push(r);
       });
       var sortedAll = newRows.slice().sort(function(a,b){
@@ -1769,13 +2209,19 @@ document.addEventListener('DOMContentLoaded', function () {
     window._queueOrderByMunicipality = orderByMunicipality;
     var newByMunicipality = {};
     var pendingByMunicipality = {};
+    var assignedByBrgyKey = {};
     rows.forEach(function(r) {
       var m = r.name || 'Unknown';
       if (isResolvedRow(r)) return;
       var b = resolveBarangayForReport(r) || r.barangay || '';
       if (!isDbPendingRow(r) && isBarangayRestored(m, b)) return;
-      var assignedTeam = getAssignedTeam(m);
       var statusIsNew = isNewComplianceRow(r);
+      var assignedTeam = getAssignedTeamForRow(r);
+      var brgyKey = (m || '').toLowerCase() + '|' + normalizeBarangayName(b);
+      if (assignedTeam) {
+        if (assignedByBrgyKey[brgyKey] && assignedByBrgyKey[brgyKey] !== assignedTeam) assignedByBrgyKey[brgyKey] = 'Multiple';
+        else assignedByBrgyKey[brgyKey] = assignedTeam;
+      }
       if (statusIsNew) {
         if (!newByMunicipality[m]) newByMunicipality[m] = new Set();
         newByMunicipality[m].add(normalizeBarangayName(b));
@@ -1843,7 +2289,7 @@ document.addEventListener('DOMContentLoaded', function () {
           badgeP.textContent = 'Pending';
           bItem.appendChild(badgeP);
           // Show assignment team beside Pending
-          var teamNow = getAssignedTeam(mName) || '';
+          var teamNow = assignedByBrgyKey[(mName || '').toLowerCase() + '|' + label] || '';
           var chip = document.createElement('span');
           chip.className = 'assignment-chip';
           chip.textContent = 'Assigned: ' + (teamNow || 'Unassigned');

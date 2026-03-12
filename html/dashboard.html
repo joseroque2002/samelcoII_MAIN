@@ -18,7 +18,7 @@
 
   <nav class="nav">
     <div class="nav-inner">
-      <a href="index.html" class="nav-logo">
+      <a href="dashboard.html" class="nav-logo">
         <span class="nav-logo-icon" aria-hidden="true">
           <img src="../assets/images/logo.png" alt="SAMELCO II logo" class="nav-logo-img">
         </span>
@@ -28,7 +28,6 @@
         </span>
       </a>
       <div class="nav-right">
-        <span class="nav-user-welcome">Welcome, <span id="user-name">User</span></span>
         <div class="notif-wrap" id="notif-wrap">
           <button type="button" class="notif-btn" id="notif-btn" aria-haspopup="true" aria-expanded="false" title="Notifications">
             <span class="notif-icon">🔔</span>
@@ -43,6 +42,7 @@
                   <div class="notif-head-sub" id="notif-summary">0 new</div>
                 </div>
               </div>
+              <button type="button" class="notif-clear-all" id="notif-clear-all" title="Mark all as read">Mark all as read</button>
             </div>
             <div class="notif-branch-pills" id="notif-branch-pills">
               <button type="button" class="pill is-active" data-branch="">All (0)</button>
@@ -79,19 +79,15 @@
             </div>
           </div>
         </div>
-        <div class="nav-dots-wrap">
-          <button type="button" class="nav-dots-trigger" aria-label="Menu" aria-expanded="false" aria-haspopup="true" id="nav-dots-btn">
-            <span class="nav-dots-icon">&#9776;</span>
-          </button>
-          <div class="nav-dots-dropdown" id="nav-dots-dropdown">
-            <button type="button" class="nav-dots-item" data-action="home">Home</button>
-            <button type="button" class="nav-dots-item" data-action="records">Records</button>
-            <button type="button" class="nav-dots-item" data-action="analytics">Analytics</button>
-            <button type="button" class="nav-dots-item" data-action="etc">About</button>
-            <button type="button" class="nav-dots-item" data-action="contact">Contact</button>
-            <button type="button" class="nav-dots-item" id="logout-btn" data-action="logout">Logout</button>
-          </div>
+        <div class="nav-links">
+          <a href="dashboard.html" class="nav-link" aria-current="page">Home</a>
+          <a href="records.html" class="nav-link">Records</a>
+          <a href="analytics.html" class="nav-link">Analytics</a>
+          <a href="about.html" class="nav-link">About</a>
+          <a href="contact.html" class="nav-link">Contact</a>
         </div>
+        <span class="nav-user-welcome">Welcome, <span id="user-name">User</span></span>
+        <button type="button" class="nav-btn nav-btn-cta" id="logout-btn">Logout</button>
       </div>
     </div>
   </nav>
@@ -111,6 +107,7 @@
           <p class="municipalities-panel-subtitle">All municipalities and cities in Samar. Click to view barangays.</p>
           <div class="municipalities-controls">
             <label class="issues-toggle"><input type="checkbox" id="issues-only-toggle"> Show issues only</label>
+            <label class="issues-toggle"><input type="checkbox" id="sound-alerts-toggle"> Sound alerts</label>
             <span class="issues-summary" id="issues-summary"></span>
             <button type="button" id="toggle-audit-btn" class="records-export-btn" style="margin-left:auto;">Audit Logs</button>
           </div>
@@ -118,7 +115,7 @@
           <div id="audit-logs" style="display:none; margin-top:0.75rem; border:1px solid #111; padding:0.75rem; border-radius:8px; background:#fff;">
             <div style="font-weight:700; margin-bottom:0.5rem;">Recent Actions</div>
             <div id="audit-logs-empty" style="color:#555;">No logs yet.</div>
-            <ul id="audit-logs-list" style="list-style:none; padding-left:0; margin:0; max-height:320px; overflow-y:auto; padding-right:6px;"></ul>
+            <ul id="audit-logs-list" style="list-style:none; padding-left:0; margin:0; max-height: 300px; overflow-y: auto;"></ul>
           </div>
         </div>
       </div>
@@ -130,6 +127,22 @@
     <span style="margin-right:8px;">🔔 Enable sound alerts</span>
     <button id="enable-alerts-btn" style="background:#ffd000; color:#1a1512; border:none; border-radius:6px; padding:6px 10px; cursor:pointer;">Enable</button>
   </div>
+
+  <div id="urgent-report-modal" class="modal urgent-report-modal" style="display:none;">
+    <div class="modal-content urgent-report-modal-content">
+      <span class="close-modal" id="close-urgent-report-modal">&times;</span>
+      <div class="urgent-report-kicker">Urgent Report</div>
+      <h2 id="urgent-report-title">Immediate attention required</h2>
+      <p class="urgent-report-subtitle" id="urgent-report-subtitle">A new urgent report needs immediate crew attention.</p>
+      <ul class="info-list urgent-report-list" id="urgent-report-info-list"></ul>
+      <div class="urgent-report-actions">
+        <button type="button" class="nav-btn nav-btn-cta" id="urgent-report-view-btn">View on Map</button>
+        <button type="button" class="records-export-btn" id="urgent-report-dismiss-btn">Dismiss</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="alarm-audio" preload="auto"></audio>
 
   <script src="../js/supabase-config.js"></script>
   <script src="../js/dashboard.js"></script>

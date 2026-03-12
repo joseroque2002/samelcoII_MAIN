@@ -40,6 +40,7 @@
         <h1>Welcome, <span id="user-dashboard-name">Guest</span>.</h1>
         <p class="user-hero-subtitle">Report brownouts, unstable voltage, damaged lines, and service faults from one place. Capture your GPS so the SAMELCO II team receives the exact location faster.</p>
         <div class="user-hero-actions">
+          <a href="#report-problem" class="nav-btn nav-btn-report">Report a Problem</a>
         </div>
       </div>
       <div class="user-hero-stats">
@@ -180,6 +181,10 @@
                 <span>Submitted</span>
                 <strong id="latest-report-time">-</strong>
               </div>
+              <div class="latest-report-row">
+                <span>Assigned Team</span>
+                <strong id="latest-report-team">Not assigned yet</strong>
+              </div>
             </div>
           </div>
         </section>
@@ -210,6 +215,14 @@
       </aside>
     </section>
   </main>
+
+  <div id="user-onway-toast" class="user-onway-toast" hidden>
+    <div class="user-onway-toast-card" role="status" aria-live="polite" aria-atomic="true">
+      <div class="user-onway-toast-kicker">Team Update</div>
+      <div class="user-onway-toast-message" id="user-onway-toast-message">Inspection is on the way to your location.</div>
+      <button type="button" class="user-onway-toast-close" id="user-onway-toast-close">Close</button>
+    </div>
+  </div>
 
   <script src="../js/supabase-config.js"></script>
   <script src="../js/municipalities-data.js"></script>

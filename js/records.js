@@ -132,9 +132,35 @@ document.addEventListener('DOMContentLoaded', function () {
       throw new Error('Missing Supabase config');
     }
     var isResolved = String(nextStatus).toLowerCase() === 'resolved';
+    var normalized = isResolved ? 'resolved' : 'pending';
     var patchBody = isResolved
       ? { status: 'resolved', resolved_at: new Date().toISOString() }
       : { status: 'pending', resolved_at: null };
+    var rpcMissing = false;
+    try {
+      var rpcRes = await fetch(cfg.url + '/rest/v1/rpc/set_report_status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: cfg.anonKey,
+          Authorization: 'Bearer ' + cfg.anonKey
+        },
+        body: JSON.stringify({
+          p_report_id: Number(reportId),
+          p_status: normalized,
+          p_team_name: null
+        })
+      });
+      if (rpcRes.ok) return;
+      var rpcText = '';
+      try { rpcText = (await rpcRes.text()) || ''; } catch (_) {}
+      if (rpcRes.status !== 404) {
+        throw new Error('Failed to update status (RPC HTTP ' + rpcRes.status + ')' + (rpcText ? ': ' + rpcText : ''));
+      }
+      rpcMissing = true;
+    } catch (err) {
+      if (!rpcMissing) throw err;
+    }
     var res = await fetch(cfg.url + '/rest/v1/' + cfg.reportsTable + '?id=eq.' + encodeURIComponent(reportId), {
       method: 'PATCH',
       headers: {
@@ -146,6 +172,9 @@ document.addEventListener('DOMContentLoaded', function () {
       body: JSON.stringify(patchBody)
     });
     if (!res.ok) {
+      if (rpcMissing && (res.status === 401 || res.status === 403)) {
+        throw new Error('Missing set_report_status RPC in Supabase. Run sql/migrations/20260311_set_report_status_function.sql.');
+      }
       throw new Error('Failed to update status: HTTP ' + res.status);
     }
   }
@@ -171,10 +200,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const tableRows = document.querySelectorAll('.records-table-row');
     tableRows.forEach(function (row) {
       const restoredCell = row.querySelector('.col-restored');
-      const rowMun = (row.getAttribute('data-municipality') || '').toLowerCase();
       const isNewFlag = row.getAttribute('data-is-new') === 'true';
       const dbStatus = (row.getAttribute('data-status-db') || 'pending').toLowerCase();
-      const assignedTeam = pendingAssignments[rowMun] || '';
+      const assignedTeam = (row.getAttribute('data-assigned-team') || '').trim();
 
       if (restoredCell) {
         if (dbStatus === 'resolved') {
@@ -198,10 +226,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const tableRows = document.querySelectorAll('.records-table-row');
     tableRows.forEach(function(row){
       var cell = row.querySelector('.col-assigned');
-      var mun = (row.getAttribute('data-municipality') || '').toLowerCase();
-      var team = pendingAssignments[mun] || '';
+      var team = (row.getAttribute('data-assigned-team') || '').trim();
       if (cell) cell.textContent = team || '';
-      row.setAttribute('data-assigned-team', team || '');
     });
   }
 
@@ -226,7 +252,8 @@ document.addEventListener('DOMContentLoaded', function () {
       'status',
       'resolved_at',
       'is_urgent',
-      'queue_number'
+      'queue_number',
+      'assigned_team'
     ].join(',');
     while (true) {
       var queueUrl = cfg.url + '/rest/v1/' + cfg.reportsTable + '?select=' + encodeURIComponent(selectCols) + '&order=queue_number.asc.nullslast&order=created_at.asc&limit=' + pageSize + '&offset=' + offset;
@@ -342,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (r.street) parts.push(r.street);
         address = parts.join(', ');
       }
-      var assignedTeam = pendingAssignments[(municipality||'').toLowerCase()] || '';
+      var assignedTeam = String(r.assigned_team || '').trim();
       var dbStatus = String(r.status || 'pending').toLowerCase();
       var isNew = !assignedTeam && dbStatus !== 'resolved';
       muniSet.add(municipality || '');
@@ -356,6 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
       row.setAttribute('data-municipality', municipality);
       row.setAttribute('data-is-new', isNew ? 'true' : 'false');
       row.setAttribute('data-status-db', dbStatus);
+      row.setAttribute('data-assigned-team', assignedTeam || '');
       row.innerHTML = '<span class="col-queue">' + (queueNumber ? ('#' + queueNumber) : '-') + '</span>' +
                       '<span class="col-date">' + date + '</span>' +
                       '<span class="col-contact">' + contact + '</span>' +
@@ -364,7 +392,6 @@ document.addEventListener('DOMContentLoaded', function () {
                       '<span class="col-status">' + statusText + '</span>' +
                       '<span class="col-assigned">' + (assignedTeam || '') + '</span>' +
                       '<span class="col-restored status-pending">Pending</span>';
-      row.setAttribute('data-assigned-team', assignedTeam || '');
       
       // Add click listener for restoration toggle
       const restoredCell = row.querySelector('.col-restored');
@@ -382,7 +409,12 @@ document.addEventListener('DOMContentLoaded', function () {
           updateCounts();
         } catch (err) {
           console.error(err);
-          alert('Failed to update status. Check Supabase UPDATE policy for reports table.');
+          var msg = String((err && err.message) || '');
+          if (/set_report_status/i.test(msg)) {
+            alert('Status update RPC is missing in Supabase. Run sql/migrations/20260311_set_report_status_function.sql.');
+          } else {
+            alert('Failed to update status. Check Supabase UPDATE policy for reports table.');
+          }
         }
       });
 

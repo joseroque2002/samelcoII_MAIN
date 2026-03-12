@@ -15,7 +15,7 @@
   <div class="orb orb-1"></div>
   <nav class="nav">
     <div class="nav-inner">
-      <a href="index.html" class="nav-logo">
+      <a href="dashboard.html" class="nav-logo">
         <span class="nav-logo-icon" aria-hidden="true">
           <img src="../assets/images/logo.png" alt="SAMELCO II logo" class="nav-logo-img">
         </span>
@@ -25,17 +25,12 @@
         </span>
       </a>
       <div class="nav-right">
-        <div class="nav-dots-wrap">
-          <button type="button" class="nav-dots-trigger" aria-label="Menu" aria-expanded="false" aria-haspopup="true" id="nav-dots-btn">
-            <span class="nav-dots-icon">&#9776;</span>
-          </button>
-          <div class="nav-dots-dropdown" id="nav-dots-dropdown">
-           <button type="button" class="nav-dots-item" data-action="home">Home</button>
-            <button type="button" class="nav-dots-item" data-action="records">Records</button>
-            <button type="button" class="nav-dots-item" data-action="analytics">Analytics</button>
-            <button type="button" class="nav-dots-item" data-action="about">About</button>
-            <button type="button" class="nav-dots-item" data-action="contact">Contact</button>
-          </div>
+        <div class="nav-links">
+          <a href="dashboard.html" class="nav-link">Home</a>
+          <a href="records.html" class="nav-link" aria-current="page">Records</a>
+          <a href="analytics.html" class="nav-link">Analytics</a>
+          <a href="about.html" class="nav-link">About</a>
+          <a href="contact.html" class="nav-link">Contact</a>
         </div>
         <span class="nav-user-welcome">Welcome, <span id="user-name">User</span></span>
         <button type="button" class="nav-btn nav-btn-cta" id="logout-btn">Logout</button>
@@ -88,11 +83,13 @@
               <button type="button" id="badge-new" class="records-table-badge records-quick-badge-btn">New Compliance <span id="badge-new-count">0</span></button>
               <button type="button" id="badge-pending" class="records-table-badge records-quick-badge-btn">Pending <span id="badge-pending-count">0</span></button>
             </div>
-            <button type="button" id="reset-restored-btn" class="records-export-btn" title="Clear all restored markers">Reset Restored</button>
-            <button type="button" id="clear-filters-btn" class="records-export-btn" title="Clear all filters">Clear Filters</button>
-            <button type="button" id="export-excel-btn" class="records-export-btn">
-              <span class="btn-icon">📥</span> Export Excel
-            </button>
+            <div class="records-action-buttons">
+              <button type="button" id="reset-restored-btn" class="records-export-btn" title="Clear all restored markers">Reset Restored</button>
+              <button type="button" id="clear-filters-btn" class="records-export-btn" title="Clear all filters">Clear Filters</button>
+              <button type="button" id="export-excel-btn" class="records-export-btn">
+                <span class="btn-icon">📥</span> Export Excel
+              </button>
+            </div>
           </div>
         </div>
         <div class="records-table-container">

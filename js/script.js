@@ -92,20 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 5000);
   }
 
-  var sizeSmallBtn = document.getElementById('size-small');
-  var sizeMediumBtn = document.getElementById('size-medium');
-  var sizeLargeBtn = document.getElementById('size-large');
-  function setCarouselHeight(h) {
-    document.documentElement.style.setProperty('--carousel-height', h);
-    try { localStorage.setItem('carouselHeight', h); } catch (_) {}
-  }
-  var savedH = null;
-  try { savedH = localStorage.getItem('carouselHeight'); } catch (_) {}
-  if (savedH) setCarouselHeight(savedH);
-  if (sizeSmallBtn) sizeSmallBtn.addEventListener('click', function(){ setCarouselHeight('calc(70svh - 6.75rem)'); });
-  if (sizeMediumBtn) sizeMediumBtn.addEventListener('click', function(){ setCarouselHeight('calc(100svh - 6.75rem)'); });
-  if (sizeLargeBtn) sizeLargeBtn.addEventListener('click', function(){ setCarouselHeight('calc(120svh - 6.75rem)'); });
-
   var supabaseCfg = window.SAMELCO_SUPABASE || {};
   const tabs = document.querySelectorAll('.tab');
   const loginForm = document.getElementById('login-form');

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Analytics â€” SAMELCO II</title>
+  <title>Analytics SAMELCO II</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@
 
   <nav class="nav">
     <div class="nav-inner">
-      <a href="index.html" class="nav-logo">
+      <a href="dashboard.html" class="nav-logo">
         <span class="nav-logo-icon" aria-hidden="true">
           <img src="../assets/images/logo.png" alt="SAMELCO II logo" class="nav-logo-img">
         </span>
@@ -30,42 +30,12 @@
         </span>
       </a>
       <div class="nav-right">
-        <div class="notif-wrap">
-          <button type="button" class="notif-btn" id="notif-btn" aria-haspopup="true" aria-expanded="false" title="Notifications">
-            <span class="notif-icon">🔔</span>
-            <span class="notif-badge" id="notif-badge" style="display:none;">0</span>
-          </button>
-          <div class="notif-dropdown" id="notif-dropdown">
-            <div class="notif-header">
-              <div class="notif-head">
-                <span class="notif-head-icon">🔔</span>
-                <div class="notif-head-text">
-                  <div class="notif-head-title">New Reports</div>
-                  <div class="notif-head-sub" id="notif-summary">0 new</div>
-                </div>
-              </div>
-            </div>
-            <div class="notif-list" id="notif-list"></div>
-            <div class="notif-empty" id="notif-empty">
-              <div class="empty-card">
-                <div class="empty-emoji">🎉</div>
-                <div class="empty-title">No new reports</div>
-                <div class="empty-sub">You’re all caught up. Enjoy the calm.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="nav-dots-wrap">
-          <button type="button" class="nav-dots-trigger" aria-label="Menu" aria-expanded="false" aria-haspopup="true" id="nav-dots-btn">
-            <span class="nav-dots-icon">&#9776;</span>
-          </button>
-          <div class="nav-dots-dropdown" id="nav-dots-dropdown">
-            <button type="button" class="nav-dots-item" data-action="home">Home</button>
-            <button type="button" class="nav-dots-item" data-action="records">Records</button>
-            <button type="button" class="nav-dots-item" data-action="analytics">Analytics</button>
-            <button type="button" class="nav-dots-item" data-action="about">About</button>
-            <button type="button" class="nav-dots-item" data-action="contact">Contact</button>
-          </div>
+        <div class="nav-links">
+          <a href="dashboard.html" class="nav-link">Home</a>
+          <a href="records.html" class="nav-link">Records</a>
+          <a href="analytics.html" class="nav-link" aria-current="page">Analytics</a>
+          <a href="about.html" class="nav-link">About</a>
+          <a href="contact.html" class="nav-link">Contact</a>
         </div>
         <span class="nav-user-welcome">Welcome, <span id="user-name">User</span></span>
         <button type="button" class="nav-btn nav-btn-cta" id="logout-btn">Logout</button>
@@ -77,75 +47,147 @@
     <div class="analytics-container">
       <div class="analytics-header">
         <h1 class="analytics-title">Analytics</h1>
-        <p class="analytics-subtitle">Insights and statistics for SAMELCO II operations</p>
+        <p class="analytics-subtitle">Explore trends, branch performance, and operational workload.</p>
+      </div>
+
+      <div class="analytics-banner">
+        <div class="analytics-banner-text">
+          <span class="analytics-banner-label">Operational Snapshot</span>
+          <span class="analytics-banner-sub" id="analytics-range-label">Showing latest data</span>
+        </div>
+        <div class="analytics-banner-actions">
+          <a class="nav-btn nav-btn-report" href="records.html">Open Records</a>
+          <button type="button" class="nav-btn nav-btn-cta" id="analytics-export-btn">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="records-table-wrap analytics-controls">
+        <div class="records-table-header-controls">
+          <div class="records-table-title-group">
+            <h2 class="records-table-title">Explore Reports</h2>
+            <div class="records-table-badge" id="analytics-live-badge">Live sync enabled</div>
+          </div>
+          <div class="records-table-actions">
+            <div class="search-box">
+              <span class="search-icon">🔎</span>
+              <input type="text" id="analytics-search" class="records-filter-input" placeholder="Search municipality, barangay, issue...">
+            </div>
+            <div class="select-wrapper">
+              <select id="analytics-range" class="records-status-filter" title="Time range">
+                <option value="30d" selected>Last 30 days</option>
+                <option value="7d">Last 7 days</option>
+                <option value="90d">Last 90 days</option>
+                <option value="all">All time</option>
+              </select>
+            </div>
+            <div class="select-wrapper">
+              <select id="analytics-muni-filter" class="records-status-filter" title="Filter by municipality">
+                <option value="all" selected>All Municipalities</option>
+              </select>
+            </div>
+            <div class="select-wrapper">
+              <select id="analytics-barangay-filter" class="records-status-filter" title="Filter by barangay">
+                <option value="all" selected>All Barangays</option>
+              </select>
+            </div>
+            <div class="select-wrapper">
+              <select id="analytics-status-filter" class="records-status-filter" title="Filter by status">
+                <option value="all" selected>All Status</option>
+                <option value="active">Active</option>
+                <option value="resolved">Resolved</option>
+              </select>
+            </div>
+            <div class="records-action-buttons">
+              <button type="button" id="analytics-clear-filters" class="records-export-btn" title="Clear analytics filters">Clear</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="analytics-stats">
-        <div class="analytics-stat-card">
-          <div class="analytics-stat-icon">⚡</div>
-          <div>
+        <article class="analytics-stat-card">
+          <span class="analytics-stat-icon" aria-hidden="true">⚡</span>
+          <div class="analytics-stat-meta">
             <span class="analytics-stat-value" id="active-problems-count">0</span>
-            <div class="analytics-stat-label">Active Problems</div>
+            <span class="analytics-stat-label">Active Issues</span>
           </div>
-        </div>
-        <div class="analytics-stat-card">
-          <div class="analytics-stat-icon">✅</div>
-          <div>
+        </article>
+        <article class="analytics-stat-card">
+          <span class="analytics-stat-icon" aria-hidden="true">✅</span>
+          <div class="analytics-stat-meta">
             <span class="analytics-stat-value" id="restored-services-count">0</span>
-            <div class="analytics-stat-label">Restored Services</div>
+            <span class="analytics-stat-label">Resolved</span>
           </div>
-        </div>
-        <div class="analytics-stat-card">
-          <div class="analytics-stat-icon">📄</div>
-          <div>
+        </article>
+        <article class="analytics-stat-card">
+          <span class="analytics-stat-icon" aria-hidden="true">📊</span>
+          <div class="analytics-stat-meta">
             <span class="analytics-stat-value" id="total-records-count">0</span>
-            <div class="analytics-stat-label">Total Records</div>
+            <span class="analytics-stat-label">Total Reports</span>
+          </div>
+        </article>
+        <article class="analytics-stat-card">
+          <span class="analytics-stat-icon" aria-hidden="true">⏱️</span>
+          <div class="analytics-stat-meta">
+            <span class="analytics-stat-value" id="analytics-overdue-count">0</span>
+            <span class="analytics-stat-label">&gt;24h Active</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="analytics-charts">
+        <div class="records-chart-wrap analytics-chart-card analytics-chart-wide">
+          <h2 class="records-table-title">Reports Per Day</h2>
+          <canvas id="reports-per-day-chart"></canvas>
+        </div>
+        <div class="records-chart-wrap analytics-chart-card">
+          <h2 class="records-table-title">Top Municipalities</h2>
+          <canvas id="top-municipalities-chart"></canvas>
+        </div>
+        <div class="records-chart-wrap analytics-chart-card">
+          <h2 class="records-table-title">Top Barangays</h2>
+          <canvas id="top-barangays-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="analytics-split">
+        <div class="analytics-card analytics-card-wide">
+          <h2 class="analytics-card-title" id="top-munis-title">Top Municipalities</h2>
+          <ul class="analytics-list" id="top-municipalities-list"></ul>
+        </div>
+      </div>
+
+      <div class="analytics-bottom">
+        <div class="analytics-table-wrap">
+          <h2 class="analytics-table-title">Municipality Performance</h2>
+          <div class="analytics-table">
+            <div class="analytics-table-header">
+              <span>Municipality</span>
+              <span>Reports</span>
+              <span>Active</span>
+              <span>Resolved</span>
+              <span>&gt;24h</span>
+            </div>
+            <div id="analytics-municipality-table-rows"></div>
+          </div>
+        </div>
+
+        <div class="records-table-wrap">
+          <div class="records-table-header-controls">
+            <div class="records-table-title-group">
+              <h2 class="records-table-title" style="font-size:1.25rem;">Recent Activity</h2>
+              <div class="records-table-badge" style="color:#7c2d12; background:#fff7ed;">Quick drill-down</div>
+            </div>
+          </div>
+          <div style="padding: 1rem 1.25rem 1.25rem;">
+            <div id="analytics-recent-list" class="issue-list"></div>
+            <div id="analytics-recent-empty" class="records-empty" style="display:none;">No reports match the current filters.</div>
           </div>
         </div>
       </div>
-
-      <div class="records-table-actions" style="margin-bottom: 1rem;">
-        <div class="select-wrapper">
-          <select id="analytics-range" class="records-status-filter" title="Range">
-            <option value="all">All</option>
-            <option value="today">Today</option>
-            <option value="7d">Last 7 Days</option>
-            <option value="30d">Last 30 Days</option>
-          </select>
-        </div>
-        <div class="select-wrapper">
-          <select id="analytics-status" class="records-status-filter" title="Status">
-            <option value="all">All</option>
-            <option value="pending">Pending</option>
-            <option value="on_the_way">On the Way</option>
-            <option value="restored">Restored</option>
-          </select>
-        </div>
-        <div class="select-wrapper">
-          <select id="analytics-topn" class="records-status-filter" title="Top N">
-            <option value="5">Top 5</option>
-            <option value="10">Top 10</option>
-            <option value="15">Top 15</option>
-          </select>
-        </div>
-        <button type="button" class="records-export-btn" id="export-municipalities-png">Export Municipalities PNG</button>
-        <button type="button" class="records-export-btn" id="export-barangays-png">Export Barangays PNG</button>
-        <button type="button" class="records-export-btn" id="export-analytics-csv">Export CSV</button>
-      </div>
-
-      <div class="two-charts-row" style="display:flex; gap:2rem; justify-content:center; margin-top:1rem; flex-wrap:wrap;">
-        <div class="records-chart-wrap" style="flex:1 1 420px; max-width:520px;">
-          <h2 class="records-table-title">Municipalities with Active Issues</h2>
-          <canvas id="municipalities-bar-chart"></canvas>
-        </div>
-        <div class="records-chart-wrap" style="flex:1 1 420px; max-width:520px;">
-          <h2 class="records-table-title">Top Barangays with Active Issues</h2>
-          <canvas id="barangays-horizontal-chart"></canvas>
-        </div>
-      </div>
+    </div>
   </section>
 
   <script src="../js/analytics.js"></script>
 </body>
-</html>
 </html>

@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (action === 'home') window.location.href = 'dashboard.html';
         else if (action === 'records') window.location.href = 'records.html';
         else if (action === 'analytics') window.location.href = 'analytics.html';
-        else if (action === 'about') window.location.href = 'about.html';
+        else if (action === 'branches') window.location.href = 'branches.html';
+        else if (action === 'etc') window.location.href = 'about.html';
         else if (action === 'contact') window.location.href = 'contact.html';
       });
     });
@@ -131,35 +132,34 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // initialize leaflet map
-  var map = L.map('map', {
-    center: [11.7, 124.9],
-    zoom: 10,
-    minZoom: 9,
-    maxZoom: 13,
-    zoomControl: true,
-    scrollWheelZoom: true,
-    maxBounds: [[10.5, 124.0], [12.5, 125.5]]
-  });
-
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
-    maxZoom: 18
-  }).addTo(map);
-
-  var customIcon = L.divIcon({
-    className: 'custom-marker',
-    html: '<div class="marker-pin"></div>',
-    iconSize: [30, 42],
-    iconAnchor: [15, 42]
-  });
-
-  municipalities.forEach(function(m) {
-    var marker = L.marker([m.lat, m.lng], { icon: customIcon }).addTo(map);
-  });
-  var group = new L.featureGroup(map._layers);
-  map.fitBounds(group.getBounds().pad(0.1));
-  window.map = map;
+  var mapEl = document.getElementById('map');
+  if (mapEl) {
+    var map = L.map('map', {
+      center: [11.7, 124.9],
+      zoom: 10,
+      minZoom: 9,
+      maxZoom: 13,
+      zoomControl: true,
+      scrollWheelZoom: true,
+      maxBounds: [[10.5, 124.0], [12.5, 125.5]]
+    });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 18
+    }).addTo(map);
+    var customIcon = L.divIcon({
+      className: 'custom-marker',
+      html: '<div class="marker-pin"></div>',
+      iconSize: [30, 42],
+      iconAnchor: [15, 42]
+    });
+    municipalities.forEach(function(m) {
+      L.marker([m.lat, m.lng], { icon: customIcon }).addTo(map);
+    });
+    var group = new L.featureGroup(map._layers);
+    map.fitBounds(group.getBounds().pad(0.1));
+    window.map = map;
+  }
 
   // Modal functionality for branches and municipalities
   var branchesCard = document.getElementById('branches-card');

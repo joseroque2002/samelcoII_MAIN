@@ -300,6 +300,12 @@ document.addEventListener('DOMContentLoaded', function () {
   function buildSubmitErrorMessage(err) {
     var msg = (err && err.message) ? String(err.message) : '';
     if (!msg) return 'Failed to submit report.';
+    if (/assigned_team_snapshots/i.test(msg) && /does not exist|42P01/i.test(msg)) {
+      return 'Failed to submit: Supabase schema is missing public.assigned_team_snapshots. Run sql/migrations/20260311_add_assigned_team_snapshots.sql in Supabase.';
+    }
+    if (/42P10|no unique or exclusion constraint matching the ON CONFLICT specification/i.test(msg)) {
+      return 'Failed to submit: Supabase snapshot upsert is missing its unique constraint. Re-run sql/migrations/20260311_add_assigned_team_snapshots.sql in Supabase.';
+    }
     if (/duplicate key value|reports_queue_number_unique_idx|queue_number/i.test(msg)) {
       return 'Failed to submit: queue sequence is out of sync. Ask admin to run sequence sync SQL in Supabase.';
     }
@@ -377,12 +383,14 @@ document.addEventListener('DOMContentLoaded', function () {
         var insertedRow = Array.isArray(inserted) && inserted.length ? inserted[0] : null;
         var finalQueue = insertedRow ? Number(insertedRow.queue_number) : NaN;
         var latestSummary = {
+          reportId: insertedRow && insertedRow.id ? Number(insertedRow.id) : '',
           queueNumber: Number.isFinite(finalQueue) ? finalQueue : '',
           issueType: row.issue_type,
           locationText: row.location_text,
           municipality: selectedMunicipality,
           barangay: selectedBarangay,
           status: insertedRow && insertedRow.status ? insertedRow.status : 'pending',
+          assignedTeam: insertedRow && insertedRow.assigned_team ? insertedRow.assigned_team : '',
           createdAt: insertedRow && insertedRow.created_at ? insertedRow.created_at : new Date().toISOString(),
           fullName: row.full_name,
           isUrgent: row.is_urgent
