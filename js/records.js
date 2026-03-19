@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   var muniDataset = Array.isArray(window.SAMELCO_MUNICIPALITIES) ? window.SAMELCO_MUNICIPALITIES : [];
   var excludedSet = (function(){
-    var arr = ['calbayog city','tarangnan','almagro','santo niño','santo niÃ±o','tagapul-an','santa margarita','gandara','pagsanghan','matuguinao','san jorge'];
+    var arr = ['calbayog city','tarangnan','almagro','santo niño','tagapul-an','santa margarita','gandara','pagsanghan','matuguinao','san jorge'];
     var o = {}; arr.forEach(function(s){ o[s] = true; }); return o;
   })();
   function isExcludedMunicipality(n) {
@@ -536,10 +536,10 @@ document.addEventListener('DOMContentLoaded', function () {
   // then fetch the latest reports to replace the table
   loadConsumerRecords();
 
-  document.getElementById('records-filter').addEventListener('input', applyFilters);
-  document.getElementById('records-date').addEventListener('change', applyFilters);
+  var fEl = document.getElementById('records-filter'); if (fEl) fEl.addEventListener('input', applyFilters);
+  var dEl = document.getElementById('records-date'); if (dEl) dEl.addEventListener('change', applyFilters);
   var mEl = document.getElementById('records-month'); if (mEl) mEl.addEventListener('change', applyFilters);
-  document.getElementById('status-filter').addEventListener('change', applyFilters);
+  var sEl = document.getElementById('status-filter'); if (sEl) sEl.addEventListener('change', applyFilters);
   var aEl = document.getElementById('assigned-filter'); if (aEl) aEl.addEventListener('change', applyFilters);
   var clearBtn = document.getElementById('clear-filters-btn');
   if (clearBtn) {
@@ -661,11 +661,7 @@ document.addEventListener('DOMContentLoaded', function () {
     statusFilter.value = 'problems';
   }
 
-  if (filterInput && recordsTable) {
-    filterInput.addEventListener('input', applyFilters);
-    if (statusFilter) statusFilter.addEventListener('change', applyFilters);
-
-    // apply initial filter (including branch) if one is set
+  if (filterInput && recordsTable && typeof applyFilters === 'function') {
     applyFilters();
   }
 

@@ -335,25 +335,25 @@ document.addEventListener('DOMContentLoaded', function () {
     { name: 'Calbiga', lat: 11.6167, lng: 125.0167, barangays: ['Antol', 'Bacyaran', 'Barangay 1', 'Barangay 2', 'Barangay 3', 'Barangay 4', 'Barangay 5', 'Barangay 6', 'Barangay 7', 'Barobaybay', 'Beri', 'Binanggaran', 'Borong', 'Bulao', 'Buluan', 'Caamlongan', 'Calayaan', 'Calingonan', 'Canbagtic', 'Canticum', 'Daligan', 'Guinbanga', 'Hindang', 'Hubasan', 'Literon', 'Lubang', 'Macaalan', 'Mahangcao', 'Malabal', 'Minata', 'Otoc', 'Panayuran', 'Pasigay', 'Patong', 'Polangi', 'Rawis', 'San Ignacio', 'San Mauricio', 'Sinalangtan', 'Timbangan', 'Tinago'] },
     { name: 'Catbalogan City', lat: 11.7792, lng: 124.8842, barangays: ['Albalate', 'Bagongon', 'Bangon', 'Basiao', 'Buluan', 'Bunuanan', 'Cabugawan', 'Cagudalo', 'Cagusipan', 'Cagutian', 'Cagutsan', 'Canhawan Gote', 'Canlapwas', 'Cawayan', 'Cinco', 'Darahuway Daco', 'Darahuway Gote', 'Estaka', 'Guindaponan', 'Guinsorongan', 'Ibol', 'Iguid', 'Lagundi', 'Libas', 'Lobo', 'Manguehay', 'Maulong', 'Mercedes', 'Mombon', 'MuÃ±oz', 'New Mahayag', 'Old Mahayag', 'Palanyogon', 'Pangdan', 'Payao', 'Poblacion 1', 'Poblacion 2', 'Poblacion 3', 'Poblacion 4', 'Poblacion 5', 'Poblacion 6', 'Poblacion 7', 'Poblacion 8', 'Poblacion 9', 'Poblacion 10', 'Poblacion 11', 'Poblacion 12', 'Poblacion 13', 'Pupua', 'Rama', 'San Andres', 'San Pablo', 'San Roque', 'San Vicente', 'Silanga', 'Socorro', 'Totoringon'] },
     { name: 'Daram', lat: 11.6333, lng: 124.7833, barangays: ['Arawane', 'Astorga', 'Bachao', 'Baclayan', 'Bagacay', 'Bayog', 'Betaug', 'Birawan', 'Bono-anon', 'Buenavista', 'Burgos', 'Cabac', 'Cabil-isan', 'Cabiton-an', 'Cabugao', 'Cagboboto', 'Calawan-an', 'Cambuhay', 'Campelipa', 'Candugue', 'Canloloy', 'Cansaganay', 'Casab-ahan', 'Guindapunan', 'Guintampilan', 'Iquiran', 'Jacopon', 'Losa', 'Lucob-lucob', 'Mabini', 'Macalpe', 'Mandoyucan', 'Marupangdan', 'Mayabay', 'Mongolbongol', 'Nipa', 'Parasan', 'Poblacion 1', 'Poblacion 2', 'Poblacion 3', 'Pondang', 'Poso', 'Real', 'Rizal', 'San Antonio', 'San Jose', 'San Miguel', 'San Roque', 'San Vicente', 'Saugan', 'So-ong', 'Sua', 'Sugod', 'Talisay', 'Tugas', 'Ubo', 'Valles-Bello', 'Yangta'] },
-    { name: 'Gandara', lat: 12.0167, lng: 124.8167, barangays: ['Adela Heights', 'Arong', 'Balocawe', 'Bangahon', 'Beslig', 'Buao', 'Bunyagan', 'Burabod I', 'Burabod II', 'Calirocan', 'Canhumawid', 'Caparangasan', 'Caranas', 'Carmona', 'Casab-ahan', 'Casandig', 'Catorse de Agosto', 'Caugbusan', 'Concepcion', 'Diaz', 'Dumalo-ong', 'Elcano', 'Gerali', 'Gereganan', 'Giaboc', 'Hampton', 'Hetebac', 'Himamaloto', 'Hinayagan', 'Hinugacan', 'Hiparayan', 'Jasminez', 'Lungib', 'Mabuhay', 'Macugo', 'Malayog', 'Marcos', 'Minda', 'Nacube', 'Nalihugan', 'Napalisan', 'Natimonan', 'Ngoso', 'Palambrag', 'Palanas', 'Pizarro', 'PiÃ±aplata', 'Pologon', 'Purog', 'Rawis', 'Rizal', 'Samoyao', 'San Agustin', 'San Antonio', 'San Enrique', 'San Francisco', 'San Isidro', 'San Jose', 'San Miguel', 'San Pelayo', 'San Ramon', 'Santa Elena', 'Santo NiÃ±o', 'Senibaran', 'Sidmon', 'Tagnao', 'Tambongan', 'Tawiran', 'Tigbawon'] },
+    { name: 'Gandara', lat: 12.0167, lng: 124.8167, barangays: ['Adela Heights', 'Arong', 'Balocawe', 'Bangahon', 'Beslig', 'Buao', 'Bunyagan', 'Burabod I', 'Burabod II', 'Calirocan', 'Canhumawid', 'Caparangasan', 'Caranas', 'Carmona', 'Casab-ahan', 'Casandig', 'Catorse de Agosto', 'Caugbusan', 'Concepcion', 'Diaz', 'Dumalo-ong', 'Elcano', 'Gerali', 'Gereganan', 'Giaboc', 'Hampton', 'Hetebac', 'Himamaloto', 'Hinayagan', 'Hinugacan', 'Hiparayan', 'Jasminez', 'Lungib', 'Mabuhay', 'Macugo', 'Malayog', 'Marcos', 'Minda', 'Nacube', 'Nalihugan', 'Napalisan', 'Natimonan', 'Ngoso', 'Palambrag', 'Palanas', 'Pizarro', 'PiÃ±aplata', 'Pologon', 'Purog', 'Rawis', 'Rizal', 'Samoyao', 'San Agustin', 'San Antonio', 'San Enrique', 'San Francisco', 'San Isidro', 'San Jose', 'San Miguel', 'San Pelayo', 'San Ramon', 'Santa Elena', 'Santo Niño', 'Senibaran', 'Sidmon', 'Tagnao', 'Tambongan', 'Tawiran', 'Tigbawon'] },
     { name: 'Hinabangan', lat: 11.6833, lng: 125.0833, barangays: ['Bagacay', 'Binobucalan', 'Bucalan', 'Cabalagnan', 'Cabang', 'Canano', 'Concord', 'Consolabao', 'Dalosdoson', 'Fatima', 'Lim-ao', 'Malihao', 'Mugdo', 'OsmeÃ±a', 'Poblacion 1', 'Poblacion 2', 'Rawis', 'San Jose', 'San Rafael', 'Tabay', 'Yabon'] },
     { name: 'Jiabong', lat: 11.7667, lng: 124.9500, barangays: ['Barangay No. 1', 'Barangay No. 2', 'Barangay No. 3', 'Barangay No. 4', 'Barangay No. 5', 'Barangay No. 6', 'Barangay No. 7', 'Barangay No. 8', 'Bawang', 'Bugho', 'Camarobo-an', 'Candayao', 'Cantongtong', 'Casapa', 'Catalina', 'Cristina', 'Dogongan', 'Garcia', 'Hinaga', 'Jia-an', 'Jidanao', 'Lulugayan', 'Macabetas', 'Malino', 'Malobago', 'Mercedes', 'Nagbac', 'Parina', 'Salvacion', 'San Andres', 'San Fernando', 'San Miguel', 'Tagbayaon', 'Victory'] },
-    { name: 'Marabut', lat: 11.1167, lng: 125.2167, barangays: ['Amambucale', 'Amantillo', 'Binukyahan', 'Caluwayan', 'Canyoyo', 'Catato Poblacion', 'Ferreras', 'Legaspi', 'Lipata', 'Logero', 'Mabuhay', 'Malobago', 'Odoc', 'OsmeÃ±a', 'Panan-awan', 'Pinalanga', 'Pinamitinan', 'RoÃ±o', 'San Roque', 'Santa Rita', 'Santo NiÃ±o Poblacion', 'Tagalag', 'Tinabanan', 'Veloso'] },
+    { name: 'Marabut', lat: 11.1167, lng: 125.2167, barangays: ['Amambucale', 'Amantillo', 'Binukyahan', 'Caluwayan', 'Canyoyo', 'Catato Poblacion', 'Ferreras', 'Legaspi', 'Lipata', 'Logero', 'Mabuhay', 'Malobago', 'Odoc', 'OsmeÃ±a', 'Panan-awan', 'Pinalanga', 'Pinamitinan', 'RoÃ±o', 'San Roque', 'Santa Rita', 'Santo Niño Poblacion', 'Tagalag', 'Tinabanan', 'Veloso'] },
     { name: 'Matuguinao', lat: 12.1333, lng: 124.8833, barangays: ['Angyap', 'Bag-otan', 'Barruz', 'Camonoan', 'Carolina', 'Deit', 'Del Rosario', 'Inubod', 'Libertad', 'Ligaya', 'Mabuligon Poblacion', 'Maduroto Poblacion', 'Mahanud', 'Mahayag', 'Nagpapacao', 'Rizal', 'Salvacion', 'San Isidro', 'San Roque', 'Santa Cruz'] },
-    { name: 'Motiong', lat: 11.7833, lng: 125.0000, barangays: ['Angyap', 'Barayong', 'Bayog', 'Beri', 'Bonga', 'Calantawan', 'Calapi', 'Caluyahan', 'Canatuan', 'Candomacol', 'Canvais', 'Capaysagan', 'Caranas', 'Caulayanan', 'Hinica-an', 'Inalad', 'Linonoban', 'Malobago', 'Malonoy', 'Mararangsi', 'Maypange', 'New Minarog', 'Oyandic', 'Pamamasan', 'Poblacion I', 'Poblacion I-A', 'Pusongan', 'San Andres', 'Santo NiÃ±o', 'Sarao'] },
-    { name: 'Pagsanghan', lat: 11.9667, lng: 124.7167, barangays: ['Bangon', 'Buenos Aires', 'Calanyugan', 'Caloloma', 'Cambaye', 'Canlapwas', 'Libertad', 'PaÃ±ge', 'San Luis', 'Santo NiÃ±o', 'Viejo', 'Villahermosa Occidental', 'Villahermosa Oriental'] },
-    { name: 'Paranas (Wright)', lat: 11.8500, lng: 125.1167, barangays: ['Anagasi', 'Apolonia', 'Bagsa', 'Balbagan', 'Bato', 'Buray', 'Cantaguic', 'Cantao-an', 'Cantato', 'Casandig I', 'Casandig II', 'Cawayan', 'Concepcion', 'Jose RoÃ±o', 'Lawaan I', 'Lawaan II', 'Lipata', 'Lokilokon', 'Mangcal', 'Maylobe', 'Minarog', 'Nawi', 'Pabanog', 'Paco', 'Pagsa-ogan', 'Pagsanjan', 'Patag', 'Pequit', 'Poblacion 1', 'Poblacion 2', 'Poblacion 3', 'Poblacion 4', 'Poblacion 5', 'Poblacion 6', 'Salay', 'San Isidro', 'Santo NiÃ±o', 'Sulopan', 'Tabucan', 'Tapul', 'Tenani', 'Tigbawon', 'Tula', 'Tutubigan'] },
+    { name: 'Motiong', lat: 11.7782, lng: 124.9986, barangays: ['Angyap', 'Barayong', 'Bayog', 'Beri', 'Bonga', 'Calantawan', 'Calapi', 'Caluyahan', 'Canatuan', 'Candomacol', 'Canvais', 'Capaysagan', 'Caranas', 'Caulayanan', 'Hinica-an', 'Inalad', 'Linonoban', 'Malobago', 'Malonoy', 'Mararangsi', 'Maypange', 'New Minarog', 'Oyandic', 'Pamamasan', 'Poblacion I', 'Poblacion I-A', 'Pusongan', 'San Andres', 'Santo Niño', 'Sarao'] },
+    { name: 'Pagsanghan', lat: 11.9667, lng: 124.7167, barangays: ['Bangon', 'Buenos Aires', 'Calanyugan', 'Caloloma', 'Cambaye', 'Canlapwas', 'Libertad', 'PaÃ±ge', 'San Luis', 'Santo Niño', 'Viejo', 'Villahermosa Occidental', 'Villahermosa Oriental'] },
+    { name: 'Paranas (Wright)', lat: 11.7715, lng: 125.0225, barangays: ['Anagasi', 'Apolonia', 'Bagsa', 'Balbagan', 'Bato', 'Buray', 'Cantaguic', 'Cantao-an', 'Cantato', 'Casandig I', 'Casandig II', 'Cawayan', 'Concepcion', 'Jose Roño', 'Lawaan I', 'Lawaan II', 'Lipata', 'Lokilokon', 'Mangcal', 'Maylobe', 'Minarog', 'Nawi', 'Pabanog', 'Paco', 'Pagsa-ogan', 'Pagsanjan', 'Patag', 'Pequit', 'Poblacion 1', 'Poblacion 2', 'Poblacion 3', 'Poblacion 4', 'Poblacion 5', 'Poblacion 6', 'Salay', 'San Isidro', 'Santo Niño', 'Sulopan', 'Tabucan', 'Tapul', 'Tenani', 'Tigbawon', 'Tula', 'Tutubigan'] },
     { name: 'Pinabacdao', lat: 11.6167, lng: 124.9833, barangays: ['Bangon', 'Barangay I', 'Barangay II', 'Botoc', 'Bugho', 'Calampong', 'Canlobo', 'Catigawan', 'Dolores', 'Lale', 'Lawaan', 'Laygayon', 'Layo', 'Loctob', 'Madalunot', 'Magdawat', 'Mambog', 'Manaing', 'Nabong', 'Obayan', 'Pahug', 'Parasanon', 'Pelaon', 'San Isidro'] },
     { name: 'San Jorge', lat: 11.3000, lng: 125.0833, barangays: ['Anquiana', 'Aurora', 'Bay-ang', 'Blanca Aurora', 'Buenavista I', 'Buenavista II', 'Bulao', 'Bungliw', 'Cabugao', 'Cag-olo-olo', 'Calundan', 'Cantaguic', 'Canyaki', 'Cogtoto-og', 'Erenas', 'Gayondato', 'Guadalupe', 'Guindapunan', 'Hernandez', 'Himay', 'Janipon', 'La Paz', 'Libertad', 'Lincoro', 'Mabuhay', 'Mancol', 'Matalud', 'Mobo-ob', 'Mombon', 'Puhagan', 'Quezon', 'Ranera', 'Rawis', 'Rosalim', 'San Isidro', 'San Jorge I', 'San Jorge II', 'San Juan', 'Sapinit', 'Sinit-an', 'Tomogbong'] },
     { name: 'San Jose de Buan', lat: 12.0500, lng: 125.0333, barangays: ['Aguingayan', 'Babaclayon', 'Barangay 1', 'Barangay 2', 'Barangay 3', 'Barangay 4', 'Can-aponte', 'Cataydongan', 'Gusa', 'Hagbay', 'Hibaca-an', 'Hiduroma', 'Hilumot', 'San Nicolas'] },
     { name: 'San Sebastian', lat: 11.7000, lng: 125.0167, barangays: ['Balogo', 'Bontod', 'Cabaywa', 'Camanhagay', 'Campiyak', 'Canduyucan', 'Dolores', 'Hita-asan I', 'Hita-asan II', 'Inobongan', 'Poblacion Barangay 1', 'Poblacion Barangay 2', 'Poblacion Barangay 3', 'Poblacion Barangay 4'] },
     { name: 'Santa Margarita', lat: 12.0378, lng: 124.6584, barangays: ['Agrupacion', 'Arapison', 'Avelino', 'Bahay', 'Balud', 'Bana-ao', 'Burabod', 'Cagsumje', 'Cautod (Poblacion)', 'Camperito', 'Campeig', 'Can-ipulan', 'Canmoros', 'Cinco', 'Curry', 'Gajo', 'Hindang', 'Ilo', 'Imelda', 'Inoraguiao', 'Jolacao', 'Lambao', 'Mabuhay', 'Mahayag', 'Matayonas', 'Monbon (Poblacion)', 'Nabulo', 'Napuro I', 'Napuro II', 'Palale', 'Panabatan', 'Panaruan', 'Roxas', 'Salvacion', 'Solsogon', 'Sundara'] },
     { name: 'Santa Rita', lat: 11.4500, lng: 124.9333, barangays: ['Alegria', 'Anibongan', 'Aslum', 'Bagolibas', 'Binanalan', 'Bokinggan Poblacion', 'Bougainvilla Poblacion', 'Cabacungan', 'Cabunga-an', 'Camayse', 'Cansadong', 'Caticugan', 'Dampigan', 'Guinbalot-an', 'Gumamela Poblacion', 'Hinangudtan', 'Igang-igang', 'La Paz', 'Lupig', 'Magsaysay', 'Maligaya', 'New Manunca', 'Old Manunca', 'Pagsulhogon', 'Rosal Poblacion', 'Salvacion', 'San Eduardo', 'San Isidro', 'San Juan', 'San Pascual', 'San Pedro', 'San Roque', 'Santa Elena', 'Santan Poblacion', 'Tagacay', 'Tominamos', 'Tulay', 'Union'] },
-    { name: 'Santo NiÃ±o', lat: 11.9833, lng: 124.4667, barangays: ['Balatguti', 'Baras', 'Basud', 'Buenavista', 'Cabunga-an', 'Corocawayan', 'Ilijan', 'Ilo', 'Lobelobe', 'Pinanangnan', 'Sevilla', 'Takut', 'Villahermosa'] },
+    { name: 'Santo Niño', lat: 11.9833, lng: 124.4667, barangays: ['Balatguti', 'Baras', 'Basud', 'Buenavista', 'Cabunga-an', 'Corocawayan', 'Ilijan', 'Ilo', 'Lobelobe', 'Pinanangnan', 'Sevilla', 'Takut', 'Villahermosa'] },
     { name: 'Tagapul-an', lat: 11.9500, lng: 124.8333, barangays: ['Baguiw', 'Balocawe', 'Guinbarucan', 'Labangbaybay', 'Luna', 'Mataluto', 'Nipa', 'Pantalan', 'Pulangbato', 'San Jose', 'San Vicente', 'Suarez', 'Sugod', 'Trinidad'] },
     { name: 'Talalora', lat: 11.5333, lng: 124.8333, barangays: ['Bo. Independencia', 'Malaguining', 'Mallorga', 'Navatas Daku', 'Navatas Guti', 'Placer', 'Poblacion Barangay 1', 'Poblacion Barangay 2', 'San Juan', 'Tatabunan', 'Victory'] },
     { name: 'Tarangnan', lat: 11.9000, lng: 124.7500, barangays: ['Alcazar', 'Awang', 'Bahay', 'Balonga-as', 'Balugo', 'Bangon Gote', 'Baras', 'Binalayan', 'Bisitahan', 'Bonga', 'Cabunga-an', 'Cagtutulo', 'Cambatutay Nuevo', 'Cambatutay Viejo', 'Canunghan', 'Catan-agan', 'Dapdap', 'Gallego', 'Imelda Poblacion', 'Lahong', 'Libucan Dacu', 'Libucan Gote', 'Lucerdoni', 'Majacob', 'Mancares', 'Marabut', 'Oeste-A', 'Oeste-B', 'Pajo', 'Palencia', 'Poblacion A', 'Poblacion B', 'Poblacion C', 'Poblacion D', 'Poblacion E', 'San Vicente', 'Santa Cruz', 'Sugod', 'Talinga', 'Tigdaranao', 'Tizon'] },
-    { name: 'Villareal', lat: 11.5667, lng: 124.9333, barangays: ['Banquil', 'Bino-ongan', 'Burabod', 'Cambaguio', 'Canmucat', 'Central', 'Conant', 'Guintarcan', 'Himyangan', 'Igot', 'Inarumbacan', 'Inasudlan', 'Lam-awan', 'Lamingao', 'Lawa-an', 'Macopa', 'Mahayag', 'Malonoy', 'Mercado', 'Miramar', 'Nagcaduha', 'Pacao', 'Pacoyoy', 'Pangpang', 'Patag', 'Plaridel', 'Polangi', 'San Andres', 'San Fernando', 'San Rafael', 'San Roque', 'Santa Rosa', 'Santo NiÃ±o', 'Soledad', 'Tayud', 'Tomabe', 'Ulayan', 'Villarosa Poblacion'] },
+    { name: 'Villareal', lat: 11.5667, lng: 124.9333, barangays: ['Banquil', 'Bino-ongan', 'Burabod', 'Cambaguio', 'Canmucat', 'Central', 'Conant', 'Guintarcan', 'Himyangan', 'Igot', 'Inarumbacan', 'Inasudlan', 'Lam-awan', 'Lamingao', 'Lawa-an', 'Macopa', 'Mahayag', 'Malonoy', 'Mercado', 'Miramar', 'Nagcaduha', 'Pacao', 'Pacoyoy', 'Pangpang', 'Patag', 'Plaridel', 'Polangi', 'San Andres', 'San Fernando', 'San Rafael', 'San Roque', 'Santa Rosa', 'Santo Niño', 'Soledad', 'Tayud', 'Tomabe', 'Ulayan', 'Villarosa Poblacion'] },
     { name: 'Zumarraga', lat: 11.6333, lng: 124.8500, barangays: ['Alegria', 'Arteche', 'Bioso', 'Boblaran', 'Botaera', 'Buntay', 'Camayse', 'Canwarak', 'Ibarra', 'Lumalantang', 'Macalunod', 'Maga-an', 'Maputi', 'Marapilit', 'Monbon', 'Mualbual', 'Pangdan', 'Poblacion 1', 'Poblacion 2', 'Poro', 'San Isidro', 'Sugod', 'Talib', 'Tinaugan', 'Tubigan'] }
   ];
   // Prefer shared data if available (single source of truth across pages)
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function () {
     municipalities = window.SAMELCO_MUNICIPALITIES;
   }
   var _excludedMunicipalitySet = (function(){
-    var arr = ['calbayog city','tarangnan','almagro','santo niño','santo niÃ±o','tagapul-an','santa margarita','gandara','pagsanghan','matuguinao','san jorge'];
+    var arr = ['calbayog city','tarangnan','almagro','santo niño','tagapul-an','santa margarita','gandara','pagsanghan','matuguinao','san jorge'];
     var o = {};
     arr.forEach(function(s){ o[s] = true; });
     return o;
@@ -375,6 +375,75 @@ document.addEventListener('DOMContentLoaded', function () {
     if (Number(m.lat) === 11.9833 && Number(m.lng) === 124.4667) return false;
     return !isExcludedMunicipality(m.name);
   });
+
+  var municipalitiesPanel = document.getElementById('municipalities-panel');
+  if (municipalitiesPanel) municipalitiesPanel.hidden = true;
+  var _hideMunicipalitiesPanelTimer = 0;
+
+  function syncMunicipalitySidebarSelection(name, options) {
+    var list = document.getElementById('municipalities-sidebar-list');
+    if (!list || !name) return null;
+    var opts = options || {};
+    var items = list.querySelectorAll('.sidebar-municipality-item');
+    var matched = null;
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var isMatch = String(item.getAttribute('data-name') || '') === String(name || '');
+      item.classList.toggle('is-active', isMatch);
+      var barangayList = item.querySelector('.sidebar-barangays');
+      if (barangayList) {
+        if (isMatch && opts.openBarangays === true) {
+          barangayList.style.display = 'block';
+        } else if (!isMatch && opts.collapseOthers === true) {
+          barangayList.style.display = 'none';
+        }
+      }
+      if (isMatch) matched = item;
+    }
+    if (matched && opts.scroll !== false) {
+      matched.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    return matched;
+  }
+
+  function revealMunicipalitiesPanel(name, options) {
+    var wasHidden = !!(municipalitiesPanel && municipalitiesPanel.hidden);
+    if (municipalitiesPanel && municipalitiesPanel.hidden) {
+      municipalitiesPanel.hidden = false;
+    }
+    var matched = name ? syncMunicipalitySidebarSelection(name, options) : null;
+    if (wasHidden && window.map && typeof window.map.invalidateSize === 'function') {
+      requestAnimationFrame(function() {
+        window.map.invalidateSize();
+      });
+    }
+    return matched;
+  }
+
+  function hideMunicipalitiesPanel() {
+    var wasShown = !!(municipalitiesPanel && !municipalitiesPanel.hidden);
+    if (municipalitiesPanel) municipalitiesPanel.hidden = true;
+    if (wasShown && window.map && typeof window.map.invalidateSize === 'function') {
+      requestAnimationFrame(function() {
+        window.map.invalidateSize();
+      });
+    }
+  }
+
+  function cancelHideMunicipalitiesPanel() {
+    if (_hideMunicipalitiesPanelTimer) {
+      clearTimeout(_hideMunicipalitiesPanelTimer);
+      _hideMunicipalitiesPanelTimer = 0;
+    }
+  }
+
+  function scheduleHideMunicipalitiesPanel() {
+    cancelHideMunicipalitiesPanel();
+    _hideMunicipalitiesPanelTimer = setTimeout(function() {
+      _hideMunicipalitiesPanelTimer = 0;
+      hideMunicipalitiesPanel();
+    }, 0);
+  }
 
   // Add all municipalities above to the right side panel
   var sidebarList = document.getElementById('municipalities-sidebar-list');
@@ -400,7 +469,16 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       item.appendChild(bList);
       item.addEventListener('click', function() {
-        bList.style.display = (bList.style.display === 'none') ? 'block' : 'none';
+        var willOpen = bList.style.display === 'none';
+        syncMunicipalitySidebarSelection(m.name, {
+          openBarangays: willOpen,
+          collapseOthers: willOpen,
+          scroll: false
+        });
+        if (!willOpen) {
+          item.classList.remove('is-active');
+          return;
+        }
         if (window.map) window.map.setView([m.lat, m.lng], 11);
         var mk = municipalityMarkersIndex[(m.name || '').toLowerCase()];
         if (mk) mk.openPopup();
@@ -414,47 +492,50 @@ document.addEventListener('DOMContentLoaded', function () {
   var map = L.map('map', {
     center: [11.7, 124.9],
     zoom: 10,
-    minZoom: 9,
+    minZoom: 8,
     maxZoom: 13,
     zoomControl: true,
     scrollWheelZoom: true,
     maxBounds: [[10.5, 124.0], [12.5, 125.5]]
   });
 
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'Â© OpenStreetMap contributors',
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors © CARTO',
+    subdomains: 'abcd',
     maxZoom: 18
   }).addTo(map);
 
-  var customIcon = L.divIcon({
-    className: 'custom-marker',
-    html: '<div class="marker-pin"></div>',
-    iconSize: [30, 42],
-    iconAnchor: [15, 42]
-  });
+  function createMarkerIcon(pinClasses) {
+    var classes = 'marker-pin' + (pinClasses ? (' ' + pinClasses) : '');
+    return L.divIcon({
+      className: 'custom-marker',
+      html: '<div class="' + classes + '"></div>',
+      iconSize: [30, 42],
+      iconAnchor: [15, 42]
+    });
+  }
 
-  // New Compliance (red)
-  var newIcon = L.divIcon({
-    className: 'custom-marker',
-    html: '<div class="marker-pin marker-pin-new"></div>',
-    iconSize: [30, 42],
-    iconAnchor: [15, 42]
-  });
+  function fitMapToServiceArea() {
+    var points = municipalities
+      .filter(function(m) {
+        return Number.isFinite(Number(m.lat)) && Number.isFinite(Number(m.lng));
+      })
+      .map(function(m) {
+        return [Number(m.lat), Number(m.lng)];
+      });
+    if (!points.length) return;
+    var bounds = L.latLngBounds(points);
+    if (bounds.isValid()) {
+      map.fitBounds(bounds.pad(0.12), { padding: [24, 24] });
+    }
+  }
 
-  // Pending (orange)
-  var pendingIcon = L.divIcon({
-    className: 'custom-marker',
-    html: '<div class="marker-pin marker-pin-pending"></div>',
-    iconSize: [30, 42],
-    iconAnchor: [15, 42]
-  });
+  var customIcon = createMarkerIcon('');
+  var newIcon = createMarkerIcon('marker-pin-new');
+  var pendingIcon = createMarkerIcon('marker-pin-pending');
+  var restoredIcon = createMarkerIcon('marker-pin-restored');
 
-  var restoredIcon = L.divIcon({
-    className: 'custom-marker',
-    html: '<div class="marker-pin marker-pin-restored"></div>',
-    iconSize: [30, 42],
-    iconAnchor: [15, 42]
-  });
+  fitMapToServiceArea();
 
   var municipalityMarkersLayer = L.layerGroup().addTo(map);
   var reportMarkersLayer = L.layerGroup().addTo(map);
@@ -465,7 +546,23 @@ document.addEventListener('DOMContentLoaded', function () {
   var adminLocation = null;
   var adminMarker = null;
   var activeRouteLine = null;
+  var activeRouteOwnerKey = '';
   var _forceAlarmFromUrl = false;
+
+  function scheduleMapResizeInvalidate() {
+    if (!window.map || typeof window.map.invalidateSize !== 'function') return;
+    requestAnimationFrame(function() {
+      window.map.invalidateSize();
+    });
+  }
+
+  window.addEventListener('resize', function() {
+    scheduleMapResizeInvalidate();
+  });
+
+  setTimeout(function() {
+    scheduleMapResizeInvalidate();
+  }, 50);
 
   function setAdminLocation(lat, lng) {
     if (!Number.isFinite(Number(lat)) || !Number.isFinite(Number(lng))) return;
@@ -508,6 +605,18 @@ document.addEventListener('DOMContentLoaded', function () {
       map.removeLayer(activeRouteLine);
       activeRouteLine = null;
     }
+    activeRouteOwnerKey = '';
+  }
+
+  function setActiveRouteOwner(nextKey) {
+    activeRouteOwnerKey = nextKey ? String(nextKey) : '';
+  }
+
+  function clearRouteLineIfDifferentOwner(nextKey) {
+    if (!activeRouteLine) return;
+    var nk = nextKey ? String(nextKey) : '';
+    if (nk && activeRouteOwnerKey && nk === activeRouteOwnerKey) return;
+    clearRouteLine();
   }
 
   function bindPopupAction(container, selector, handler) {
@@ -610,8 +719,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (pb) bName = pb;
       }
       if (!mName) return;
-      var key = (mName || '').toLowerCase() + '|' + normalizeBarangayName(bName || '');
-      _pendingOpenTarget = { key: key };
+      var cm = getMunicipalityByName(mName);
+      if (cm && cm.name) mName = cm.name;
+      var key = getMunicipalityIndexKey(mName || '') + '|' + normalizeBarangayName(bName || '');
+      _pendingOpenTarget = { key: key, mName: mName, bName: bName };
     } catch (e) {}
   }
   setPendingTargetFromUrl();
@@ -862,7 +973,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!report) return;
     var mk = reportMarkersById[String(report.id)] || null;
     if (!mk) {
-      var key = (report.name || '').toLowerCase() + '|' + normalizeBarangayName(report.barangay || '');
+      var key = getMunicipalityIndexKey(report.name || '') + '|' + normalizeBarangayName(report.barangay || '');
       mk = reportMarkersIndex[key] || null;
     }
     if (!mk || !window.map) return;
@@ -1128,9 +1239,43 @@ document.addEventListener('DOMContentLoaded', function () {
     return !assignedTeam;
   }
 
+  function buildIdSet(ids) {
+    var out = {};
+    if (!Array.isArray(ids)) return out;
+    ids.forEach(function(id) {
+      var key = String(id || '');
+      if (key) out[key] = true;
+    });
+    return out;
+  }
+
+  function getMarkerPinEl(marker) {
+    if (!marker || typeof marker.getElement !== 'function') return null;
+    var el = marker.getElement();
+    if (!el) return null;
+    return el.querySelector('.marker-pin') || null;
+  }
+
+  function setMarkerBlink(marker, shouldBlink) {
+    var pin = getMarkerPinEl(marker);
+    if (!pin) return;
+    pin.classList.toggle('marker-pin-blink', !!shouldBlink);
+  }
+
+  function isUnreadNewReportRow(r, readSet) {
+    if (!r || isResolvedRow(r)) return false;
+    if (!isNewComplianceRow(r)) return false;
+    var id = String(r.id || '');
+    if (!id) return false;
+    return !(readSet && readSet[id]);
+  }
+
   function renderMunicipalityMarkers(locations) {
     refreshNewestUnresolvedFlag(locations);
+    var readSet = buildIdSet(getReadNotifIds());
     municipalityMarkersLayer.clearLayers();
+    municipalityMarkersIndex = {};
+    return;
     municipalities.forEach(function(m) {
       var muniReports = locations.filter(function(p) { return p.name === m.name; });
       // exclude barangays marked as restored
@@ -1142,20 +1287,18 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       var unresolvedReports = visibleReports.filter(function(r){ return !isResolvedRow(r); });
       var hasProblem = unresolvedReports.length > 0;
-      var isParanas = /paranas/i.test(m.name);
-      var hasOnTheWay = unresolvedReports.some(function(r){ return isOnTheWayRow(r); });
-      var isRestored = !hasProblem && visibleReports.length > 0;
+      if (!hasProblem) return;
+      var hasNewCompliance = unresolvedReports.some(function(r){ return isNewComplianceRow(r); });
+      var isRestored = false;
       var icon;
-      if (hasProblem) {
-        if (isParanas) icon = restoredIcon;
-        else if (isRestored) icon = restoredIcon;
-        else if (hasOnTheWay) icon = pendingIcon;
-        else icon = newIcon;
-      } else {
-        icon = (isParanas || isRestored) ? restoredIcon : customIcon;
-      }
+      icon = hasNewCompliance ? newIcon : pendingIcon;
       var marker = L.marker([m.lat, m.lng], { icon: icon }).addTo(municipalityMarkersLayer);
       municipalityMarkersIndex[(m.name || '').toLowerCase()] = marker;
+      var hasUnreadNew = visibleReports.some(function(r) { return isUnreadNewReportRow(r, readSet); });
+      setMarkerBlink(marker, hasUnreadNew);
+      marker.on('click', function() {
+        markMunicipalityAsRead(m.name || '', locations);
+      });
       if (hasProblem) {
         var problem = unresolvedReports[0] || {};
         var problemStatus = getStatusKey(problem);
@@ -1202,14 +1345,6 @@ document.addEventListener('DOMContentLoaded', function () {
           L.DomEvent.disableScrollPropagation(container);
         }
         var teamSelectEl = container.querySelector('.team-select');
-        var list = document.getElementById('municipalities-sidebar-list');
-        if (list) {
-          var it = list.querySelector('.sidebar-municipality-item[data-name="' + m.name + '"]');
-          if (it) {
-            // Do not auto-open barangays; only scroll to municipality header
-            it.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }
-        }
         if (teamSelectEl) {
           var assignedTeam = getAssignedTeamForRow(problem);
           if (assignedTeam) teamSelectEl.value = assignedTeam;
@@ -1245,7 +1380,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 teamSelectEl.value = t;
               }
               if (problem && problem.id) {
-                try { await setReportAssignedTeamById(problem.id, t); } catch (err) {
+                try { await setReportStatusById(problem.id, 'ontheway', t); } catch (err) {
                   console.error(err);
                   alert(buildStatusUpdateErrorMessage(err));
                   return;
@@ -1312,6 +1447,17 @@ document.addEventListener('DOMContentLoaded', function () {
     x = x.replace(/\s+/g, ' ').trim();
     return x;
   }
+  function getMunicipalityIndexKey(name) {
+    return normalizeMunicipalityKey(name || '');
+  }
+  function hash32(str) {
+    var s = String(str || '');
+    var h = 0;
+    for (var i = 0; i < s.length; i++) {
+      h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    }
+    return h >>> 0;
+  }
   function getMunicipalityByName(name) {
     if (!name) return null;
     var key = normalizeMunicipalityKey(name);
@@ -1319,6 +1465,35 @@ document.addEventListener('DOMContentLoaded', function () {
     return municipalities.find(function(m){
       return normalizeMunicipalityKey(m.name) === key;
     }) || null;
+  }
+  function getMunicipalityByKey(key) {
+    var k = normalizeMunicipalityKey(key || '');
+    if (!k) return null;
+    return municipalities.find(function(m){
+      return normalizeMunicipalityKey(m.name) === k;
+    }) || null;
+  }
+  function getFallbackLatLngForBarangay(municipalityName, barangayName, seed) {
+    var muni = getMunicipalityByName(municipalityName) || getMunicipalityByKey(municipalityName);
+    if (!muni) return null;
+    var baseLat = Number(muni.lat), baseLng = Number(muni.lng);
+    if (!Number.isFinite(baseLat) || !Number.isFinite(baseLng)) return null;
+    var bKey = normalizeBarangayName(barangayName || '');
+    var anchorKey = getMunicipalityIndexKey(muni.name) + '|' + bKey;
+    var h = hash32(anchorKey);
+    var ang = (h % 360) * (Math.PI / 180);
+    var ring = (h % 4) + 2;
+    var rad = 0.003 * ring;
+    var lat = baseLat + rad * Math.cos(ang);
+    var lng = baseLng + (rad * Math.sin(ang)) / Math.cos(baseLat * Math.PI / 180);
+    if (seed != null && String(seed) !== '') {
+      var h2 = hash32(seed);
+      var ang2 = (h2 % 360) * (Math.PI / 180);
+      var rad2 = 0.0007 * ((h2 % 3) + 1);
+      lat = lat + rad2 * Math.cos(ang2);
+      lng = lng + (rad2 * Math.sin(ang2)) / Math.cos(lat * Math.PI / 180);
+    }
+    return [lat, lng];
   }
   function findMunicipalityByLocationText(locationText) {
     if (!locationText) return null;
@@ -1429,77 +1604,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var notifBadge = document.getElementById('notif-badge');
   var notifList = document.getElementById('notif-list');
   var notifEmpty = document.getElementById('notif-empty');
-  var notifBranchSel = document.getElementById('notif-branch-filter');
-  var notifMuniSel = document.getElementById('notif-muni-filter');
-  var notifBranchPills = document.getElementById('notif-branch-pills');
   var clearAllBtn = document.getElementById('notif-clear-all');
-  // populate municipalities into notif muni filter
-  if (notifMuniSel && Array.isArray(municipalities)) {
-    var existing = Array.from(notifMuniSel.options).map(function(o){ return o.value; });
-    municipalities.forEach(function(m){
-      if (!m || existing.includes(m.name)) return;
-      var opt = document.createElement('option');
-      opt.value = m.name;
-      opt.textContent = m.name;
-      notifMuniSel.appendChild(opt);
-    });
-  }
-  // branch inference
-  var BRANCH_NAMES = ['Paranas', 'Catbalogan', 'Villareal', 'Basey'];
-  var BRANCH_CENTERS = {};
-  BRANCH_CENTERS['Paranas'] = getMunicipalityByName('Paranas (Wright)') || getMunicipalityByName('Paranas');
-  BRANCH_CENTERS['Catbalogan'] = getMunicipalityByName('Catbalogan City') || getMunicipalityByName('Catbalogan');
-  BRANCH_CENTERS['Villareal'] = getMunicipalityByName('Villareal');
-  BRANCH_CENTERS['Basey'] = getMunicipalityByName('Basey');
-  function distanceApprox(a, b) {
-    var Rlat = (a.lat - b.lat), Rlng = (a.lng - b.lng) * Math.cos(a.lat * Math.PI/180);
-    return Math.sqrt(Rlat*Rlat + Rlng*Rlng);
-  }
-  function inferBranch(muniName) {
-    var muni = getMunicipalityByName(muniName) || findMunicipalityByLocationText(muniName);
-    if (!muni) return 'Others';
-    var best = 'Others', bestD = Infinity;
-    BRANCH_NAMES.forEach(function(bn){
-      var c = BRANCH_CENTERS[bn];
-      if (c && typeof c.lat === 'number' && typeof c.lng === 'number') {
-        var d = distanceApprox(muni, c);
-        if (d < bestD) { bestD = d; best = bn; }
-      }
-    });
-    return best;
-  }
-  // persist filters
-  var savedBranch = localStorage.getItem('notifBranchFilter') || '';
-  var savedMuni = localStorage.getItem('notifMuniFilter') || '';
-  if (notifBranchSel) notifBranchSel.value = savedBranch;
-  if (notifMuniSel) notifMuniSel.value = savedMuni;
-  if (notifBranchSel) notifBranchSel.addEventListener('change', function(){
-    localStorage.setItem('notifBranchFilter', this.value || '');
-    // re-render using last cache if available
-    if (window._lastNewRows) updateNotifications(window._lastNewRows);
-  });
-  if (notifMuniSel) notifMuniSel.addEventListener('change', function(){
-    localStorage.setItem('notifMuniFilter', this.value || '');
-    if (window._lastNewRows) updateNotifications(window._lastNewRows);
-  });
-  if (notifBranchPills) {
-    notifBranchPills.addEventListener('click', function(e){
-      var btn = e.target.closest('.pill');
-      if (!btn) return;
-      var val = btn.getAttribute('data-branch') || '';
-      if (notifBranchSel) notifBranchSel.value = val;
-      localStorage.setItem('notifBranchFilter', val);
-      Array.from(notifBranchPills.querySelectorAll('.pill')).forEach(function(p){ p.classList.remove('is-active'); });
-      btn.classList.add('is-active');
-      if (window._lastNewRows) updateNotifications(window._lastNewRows);
-    });
-    // initialize active state
-    var initBtn = notifBranchPills.querySelector('.pill[data-branch="' + (savedBranch || '') + '"]') || notifBranchPills.querySelector('.pill[data-branch=""]');
-    if (initBtn) {
-      Array.from(notifBranchPills.querySelectorAll('.pill')).forEach(function(p){ p.classList.remove('is-active'); });
-      initBtn.classList.add('is-active');
-    }
-  }
   function getReadNotifIds() {
     try {
       var raw = localStorage.getItem('readNotifIds');
@@ -1509,6 +1614,76 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   function setReadNotifIds(ids) {
     try { localStorage.setItem('readNotifIds', JSON.stringify(Array.from(new Set(ids)).slice(-4000))); } catch(e){}
+  }
+
+  function markReportAsRead(reportId) {
+    var id = String(reportId || '');
+    if (!id) return;
+    var read = getReadNotifIds();
+    if (read.indexOf(id) === -1) {
+      read.push(id);
+      setReadNotifIds(read);
+    }
+    var active = getActiveNotifIds();
+    var next = active.filter(function(x){ return String(x) !== id; });
+    if (next.length !== active.length) setActiveNotifIds(next);
+    rebuildActiveNotifications(window._dashboardLocations || []);
+  }
+
+  function markMunicipalityAsRead(mName, rows) {
+    var muniName = String(mName || '');
+    if (!muniName) return;
+    var list = Array.isArray(rows) ? rows : (window._dashboardLocations || []);
+    var read = getReadNotifIds();
+    var readSet = buildIdSet(read);
+    var newlyReadIds = [];
+    list.forEach(function(r) {
+      if (!r) return;
+      if (String(r.name || '') !== muniName) return;
+      if (!isUnreadNewReportRow(r, readSet)) return;
+      var id = String(r.id || '');
+      if (id) newlyReadIds.push(id);
+    });
+    if (!newlyReadIds.length) {
+      updateMunicipalityBlinkState(muniName);
+      return;
+    }
+    newlyReadIds.forEach(function(id) {
+      if (read.indexOf(id) === -1) read.push(id);
+    });
+    setReadNotifIds(read);
+    var active = getActiveNotifIds();
+    var next = active.filter(function(id) { return newlyReadIds.indexOf(String(id)) === -1; });
+    if (next.length !== active.length) setActiveNotifIds(next);
+    rebuildActiveNotifications(window._dashboardLocations || []);
+    var newReadSet = buildIdSet(getReadNotifIds());
+    list.forEach(function(r) {
+      if (!r) return;
+      if (String(r.name || '') !== muniName) return;
+      var mk = reportMarkersById[String(r.id || '')];
+      if (!mk) return;
+      setMarkerBlink(mk, isUnreadNewReportRow(r, newReadSet));
+    });
+    updateMunicipalityBlinkState(muniName);
+  }
+
+  function updateMunicipalityBlinkState(mName) {
+    var key = String(mName || '').toLowerCase();
+    if (!key) return;
+    var mk = municipalityMarkersIndex[key];
+    if (!mk) return;
+    var rows = window._dashboardLocations || [];
+    var readSet = buildIdSet(getReadNotifIds());
+    var hasUnread = rows.some(function(r) {
+      if (!r) return false;
+      if (String(r.name || '').toLowerCase() !== key) return false;
+      if (isResolvedRow(r)) return false;
+      var b = resolveBarangayForReport(r) || r.barangay || '';
+      if (isPinHidden(r.name || '', b, r.id)) return false;
+      if (!isDbPendingRow(r) && isBarangayRestored(r.name || '', b)) return false;
+      return isUnreadNewReportRow(r, readSet);
+    });
+    setMarkerBlink(mk, hasUnread);
   }
   function toggleNotif(open) {
     if (!notifDropdown || !notifBtn) return;
@@ -1582,37 +1757,10 @@ document.addEventListener('DOMContentLoaded', function () {
   function updateNotifications(newRows) {
     if (!notifList || !notifBadge || !notifEmpty) return;
     window._lastNewRows = Array.isArray(newRows) ? newRows.slice() : [];
-    // compute counts for branch pills
-    if (notifBranchPills) {
-      var branchCounts = { 'Paranas':0, 'Catbalogan':0, 'Villareal':0, 'Basey':0 };
-      window._lastNewRows.forEach(function(r){
-        var b = inferBranch(r.name);
-        if (branchCounts.hasOwnProperty(b)) branchCounts[b] += 1;
-      });
-      var total = window._lastNewRows.length;
-      var mapText = function(name){ return name + ' (' + (branchCounts[name]||0) + ')'; };
-      var allBtn = notifBranchPills.querySelector('.pill[data-branch=""]');
-      if (allBtn) allBtn.textContent = 'All (' + total + ')';
-      ['Paranas','Catbalogan','Villareal','Basey'].forEach(function(bn){
-        var btn = notifBranchPills.querySelector('.pill[data-branch="' + bn + '"]');
-        if (btn) btn.textContent = mapText(bn);
-      });
-    }
-    var branchFilter = (notifBranchSel && notifBranchSel.value) ? String(notifBranchSel.value) : '';
-    var muniFilter = (notifMuniSel && notifMuniSel.value) ? String(notifMuniSel.value) : '';
-    var items = window._lastNewRows.filter(function(r){
-      var pass = true;
-      if (branchFilter) {
-        pass = pass && (inferBranch(r.name) === branchFilter);
-      }
-      if (muniFilter) {
-        pass = pass && (r.name === muniFilter);
-      }
-      return pass;
-    }).slice().reverse();
+    var items = window._lastNewRows.slice().reverse();
     notifList.innerHTML = '';
     if (!items.length) {
-      notifEmpty.innerHTML = '<div class="empty-card"><div class="empty-emoji">🎉</div><div class="empty-title">No new reports</div><div class="empty-sub">You’re all caught up. Enjoy the calm.</div></div>';
+      notifEmpty.innerHTML = '<div class="empty-title">No new reports</div>';
       notifEmpty.style.display = 'block';
       if (notifBadge) notifBadge.style.display = 'none';
       return;
@@ -1627,24 +1775,14 @@ document.addEventListener('DOMContentLoaded', function () {
     items.slice(0, 30).forEach(function(r){
       var brgy = resolveBarangayForReport(r) || r.barangay || '';
       var time = formatTimeAgo(r.createdAt);
-      var br = inferBranch(r.name);
       var div = document.createElement('div');
       div.className = 'notif-item';
-      var brCls = 'branch-' + String(br || 'others').toLowerCase();
-      div.classList.add(brCls);
       var leftCol = document.createElement('div');
       leftCol.className = 'notif-left';
       var title = document.createElement('div');
       title.className = 'notif-item-title';
-      var dot = document.createElement('span');
-      dot.className = 'notif-dot';
-      title.appendChild(dot);
       var titleText = document.createTextNode(r.name + ' · ' + brgy);
       title.appendChild(titleText);
-      var mini = document.createElement('span');
-      mini.className = 'notif-branch-mini';
-      mini.textContent = br;
-      title.appendChild(mini);
       var issuePill = document.createElement('span');
       issuePill.className = 'notif-issue-pill';
       issuePill.textContent = r.issue;
@@ -1673,7 +1811,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ev.preventDefault();
         var mk = reportMarkersById[String(r.id)];
         if (!mk) {
-          var key = (r.name || '').toLowerCase() + '|' + normalizeBarangayName(brgy);
+          var key = getMunicipalityIndexKey(r.name || '') + '|' + normalizeBarangayName(brgy);
           mk = reportMarkersIndex[key];
         }
         if (window.map) {
@@ -1723,7 +1861,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ev.preventDefault();
         var mk = reportMarkersById[String(r.id)];
         if (!mk) {
-          var key = (r.name || '').toLowerCase() + '|' + normalizeBarangayName(brgy);
+          var key = getMunicipalityIndexKey(r.name || '') + '|' + normalizeBarangayName(brgy);
           mk = reportMarkersIndex[key];
         }
         if (window.map) {
@@ -1749,50 +1887,70 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function renderReportMarkers(rows) {
     refreshNewestUnresolvedFlag(rows);
+    var readSet = buildIdSet(getReadNotifIds());
     reportMarkersLayer.clearLayers();
     reportMarkersIndex = {};
     reportMarkersById = {};
+    function toRadians(value) { return value * (Math.PI / 180); }
+    function distanceKm(lat1, lng1, lat2, lng2) {
+      var earthRadiusKm = 6371;
+      var dLat = toRadians(lat2 - lat1);
+      var dLng = toRadians(lng2 - lng1);
+      var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return earthRadiusKm * c;
+    }
+    function findNearestMunicipality(latitude, longitude) {
+      var nearest = null, nearestDistance = Infinity;
+      municipalities.forEach(function(m){
+        var mLat = Number(m.lat), mLng = Number(m.lng);
+        if (!Number.isFinite(mLat) || !Number.isFinite(mLng)) return;
+        var d = distanceKm(latitude, longitude, mLat, mLng);
+        if (d < nearestDistance) { nearestDistance = d; nearest = m; }
+      });
+      return nearest;
+    }
     rows.forEach(function(r) {
       var rb = resolveBarangayForReport(r) || r.barangay || '';
       if (isPinHidden(r.name || '', rb, r.id)) return;
-      var isParanasRow = /paranas/i.test(r.name || '');
-      var muniExact = municipalities.find(function(mm){ return (mm.name||'').toLowerCase() === (r.name||'').toLowerCase(); });
-      if (!isParanasRow && muniExact && /paranas/i.test(muniExact.name)) isParanasRow = true;
-      var rb = rb;
-      if (!isDbPendingRow(r) && !isResolvedRow(r) && isBarangayRestored(r.name || '', rb)) return;
+      if (isResolvedRow(r)) return;
       var lat = Number(r.latitude);
       var lng = Number(r.longitude);
+      var nearest = (Number.isFinite(lat) && Number.isFinite(lng)) ? findNearestMunicipality(lat, lng) : null;
+      var displayMunicipality = (nearest && nearest.name) ? nearest.name : (r.name || '');
+      var rb = rb;
+      if (!isDbPendingRow(r) && !isResolvedRow(r) && isBarangayRestored(r.name || '', rb)) return;
       // Fallback: if no precise GPS, place near municipality center with deterministic offset per barangay
       if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-        var muni = municipalities.find(function(mm){ return (mm.name||'').toLowerCase() === (r.name||'').toLowerCase(); });
-        if (!muni) return; // cannot place without a municipality center
-        var baseLat = Number(muni.lat), baseLng = Number(muni.lng);
-        if (!Number.isFinite(baseLat) || !Number.isFinite(baseLng)) return;
-        var key = (r.barangay || r.name || 'x') + '|' + (r.createdAt || '');
-        var h = 0;
-        for (var i=0;i<key.length;i++){ h = (h*31 + key.charCodeAt(i)) >>> 0; }
-        var angle = (h % 360) * (Math.PI/180);
-        var ring = (h % 3) + 1; // 1..3 rings
-        var radiusDeg = 0.005 * ring; // ~0.5km, 1km, 1.5km (approx)
-        // simple equirectangular offset
-        lat = baseLat + radiusDeg * Math.cos(angle);
-        lng = baseLng + (radiusDeg * Math.sin(angle)) / Math.cos(baseLat * Math.PI/180);
+        var brgyForPos = rb || r.barangay || '';
+        if (!brgyForPos) {
+          var locText = getReportLocationText(r);
+          var pb = parseBarangayFromLocationText(locText);
+          if (pb) brgyForPos = pb;
+        }
+        var ll2 = getFallbackLatLngForBarangay(displayMunicipality || r.name || '', brgyForPos, String(r.id || '') + '|' + String(r.createdAt || ''));
+        if (!ll2) return;
+        lat = ll2[0];
+        lng = ll2[1];
       }
-      var isRestored = isResolvedRow(r);
+      var isRestored = false;
       var statusKey = getStatusKey(r);
       var assignedTeam = getAssignedTeamForRow(r);
-      var iconForRow = isRestored ? restoredIcon : (statusKey === 'ontheway' ? pendingIcon : newIcon);
-      if (isParanasRow) iconForRow = restoredIcon;
+      var isNewReport = isNewComplianceRow(r);
+      var iconForRow = statusKey === 'ontheway' ? pendingIcon : (isNewReport ? newIcon : pendingIcon);
       var marker = L.marker([lat, lng], { icon: iconForRow }).addTo(reportMarkersLayer);
-      var idxKey = (r.name || '').toLowerCase() + '|' + normalizeBarangayName(rb);
+      setMarkerBlink(marker, isUnreadNewReportRow(r, readSet));
+      var idxKey = getMunicipalityIndexKey(displayMunicipality || '') + '|' + normalizeBarangayName(rb);
       reportMarkersIndex[idxKey] = marker;
       reportMarkersById[String(r.id)] = marker;
       // determine restored status for this municipality name
-      var statusText = isRestored ? 'Resolved' : (statusKey === 'ontheway' ? 'On The Way' : 'Pending');
-      var statusColor = isRestored ? 'green' : (statusKey === 'ontheway' ? '#f97316' : '#dc2626');
+      var statusText = statusKey === 'ontheway' ? 'On The Way' : 'Pending';
+      var statusColor = statusKey === 'ontheway' ? '#f97316' : (isNewReport ? '#dc2626' : '#f97316');
       var slaBadge2 = '';
       try {
-        if (isOverdueRow(r) && !isRestored) {
+        if (isOverdueRow(r)) {
           slaBadge2 = ' <span style="display:inline-block; margin-left:6px; background:#b91c1c; color:#fff; padding:2px 6px; border-radius:10px;">>24h Overdue</span>';
         }
       } catch(e){}
@@ -1822,7 +1980,7 @@ document.addEventListener('DOMContentLoaded', function () {
         : '';
       marker.bindPopup(
         '<div class="map-popup">' +
-          '<div class="map-popup-title">' + r.name + '</div>' +
+          '<div class="map-popup-title">' + displayMunicipality + '</div>' +
           '<div class="map-popup-sub">' + (rb || r.barangay || '') + '</div>' +
           '<div class="map-popup-issue">' + r.issue + queueBadgeLine + '</div>' +
           '<div class="map-popup-status" style="color:' + statusColor + ';">Status: ' + statusText + '</div>' +
@@ -1837,15 +1995,28 @@ document.addEventListener('DOMContentLoaded', function () {
       );
       // clicking the red (hazard) marker should take user to the report page
       marker.on('click', function() {
+        clearRouteLineIfDifferentOwner('report:' + String(r.id || ''));
+        if (isUnreadNewReportRow(r, buildIdSet(getReadNotifIds()))) {
+          markReportAsRead(r.id);
+        }
+        setMarkerBlink(marker, false);
+        updateMunicipalityBlinkState(displayMunicipality || '');
         if (window.map) window.map.setView([lat, lng], 13);
         marker.openPopup();
       });
       marker.on('popupopen', function(e) {
+        clearRouteLineIfDifferentOwner('report:' + String(r.id || ''));
+        if (isUnreadNewReportRow(r, buildIdSet(getReadNotifIds()))) {
+          markReportAsRead(r.id);
+        }
+        setMarkerBlink(marker, false);
+        updateMunicipalityBlinkState(displayMunicipality || '');
         var container = e.popup.getElement();
         if (container && typeof L !== 'undefined' && L.DomEvent) {
           L.DomEvent.disableClickPropagation(container);
           L.DomEvent.disableScrollPropagation(container);
         }
+        revealMunicipalitiesPanel(displayMunicipality, { openBarangays: true, collapseOthers: true });
         var teamSelectEl = container.querySelector('.team-select');
         if (teamSelectEl) {
           var assignedTeam = getAssignedTeamForRow(r);
@@ -1881,13 +2052,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 t = 'Line Crew A';
                 teamSelectEl.value = t;
               }
-              try { await setReportAssignedTeamById(r.id, t); } catch (err) {
+              try { await setReportStatusById(r.id, 'ontheway', t); } catch (err) {
                 console.error(err);
                 alert(buildStatusUpdateErrorMessage(err));
                 return;
               }
               lockPendingAssignControls(container, t);
-              clearRouteLine();
+              setActiveRouteOwner('report:' + String(r.id || ''));
               drawRouteFromAdminTo(lat, lng);
               loadReportsFromSupabase();
               return;
@@ -1913,6 +2084,7 @@ document.addEventListener('DOMContentLoaded', function () {
               return;
             }
             if (tgt.classList.contains('show-route-map')) {
+              setActiveRouteOwner('report:' + String(r.id || ''));
               drawRouteFromAdminTo(lat, lng);
               return;
             }
@@ -1960,21 +2132,15 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (_pendingOpenTarget.key) {
           // fallback: use municipality center with small offset
           var parts = _pendingOpenTarget.key.split('|');
-          var mName = parts[0] || '';
-          var bName = parts[1] || '';
-          var muni = municipalities.find(function(mm){ return (mm.name||'').toLowerCase() === mName; });
-          if (muni && Number.isFinite(Number(muni.lat)) && Number.isFinite(Number(muni.lng))) {
-            var baseLat = Number(muni.lat), baseLng = Number(muni.lng);
-            var k = String(bName||'') + '|' + String(mName||'');
-            var h = 0; for (var i=0;i<k.length;i++){ h = (h*31 + k.charCodeAt(i)) >>> 0; }
-            var ang = (h % 360) * (Math.PI/180);
-            var rad = 0.01;
-            var lat = baseLat + rad * Math.cos(ang);
-            var lng = baseLng + (rad * Math.sin(ang)) / Math.cos(baseLat * Math.PI/180);
-            window.map.setView([lat, lng], 13);
+          var mName = _pendingOpenTarget.mName || parts[0] || '';
+          var bName = _pendingOpenTarget.bName || parts[1] || '';
+          var ll2 = getFallbackLatLngForBarangay(mName, bName, 'deeplink');
+          if (ll2 && window.map) {
+            window.map.setView(ll2, 13);
+            var muni = getMunicipalityByName(mName) || getMunicipalityByKey(mName) || {};
             L.popup()
-              .setLatLng([lat, lng])
-              .setContent('<strong>' + (muni.name || mName) + '</strong><br>' + bName)
+              .setLatLng(ll2)
+              .setContent('<strong>' + ((muni && muni.name) ? muni.name : mName) + '</strong><br>' + (bName || ''))
               .openOn(window.map);
           }
         }
@@ -2056,6 +2222,17 @@ document.addEventListener('DOMContentLoaded', function () {
   localStorage.setItem('problemLocations', JSON.stringify([]));
   renderMunicipalityMarkers([]);
   window.map = map;
+  if (map && typeof map.on === 'function') {
+    map.on('popupopen', function() {
+      cancelHideMunicipalitiesPanel();
+    });
+    map.on('popupclose', function() {
+      scheduleHideMunicipalitiesPanel();
+    });
+    map.on('click', function() {
+      scheduleHideMunicipalitiesPanel();
+    });
+  }
   loadTeamsFromSupabase().finally(function() {
     loadReportsFromSupabase();
     setInterval(function(){ loadReportsFromSupabase(); }, 30000);
@@ -2330,7 +2507,7 @@ document.addEventListener('DOMContentLoaded', function () {
           bItem.style.cursor = 'pointer';
           bItem.addEventListener('click', function(ev) {
             ev.stopPropagation();
-            var key = (mName || '').toLowerCase() + '|' + label;
+            var key = getMunicipalityIndexKey(mName || '') + '|' + label;
             var mk = reportMarkersIndex[key];
               if (window.map) {
                 if (mk) {
@@ -2339,19 +2516,14 @@ document.addEventListener('DOMContentLoaded', function () {
                   mk.openPopup();
                 } else {
                   // Fallback: position near municipality center using deterministic offset from barangay label
-                  var muni = municipalities.find(function(mm){ return (mm.name||'').toLowerCase() === (mName||'').toLowerCase(); });
-                  if (muni && Number.isFinite(Number(muni.lat)) && Number.isFinite(Number(muni.lng))) {
-                    var baseLat = Number(muni.lat), baseLng = Number(muni.lng);
-                    var k = String(label||'') + '|' + String(mName||'');
-                    var h = 0; for (var i=0;i<k.length;i++){ h = (h*31 + k.charCodeAt(i)) >>> 0; }
-                    var ang = (h % 360) * (Math.PI/180);
-                    var rad = 0.01; // ~1km
-                    var lat = baseLat + rad * Math.cos(ang);
-                    var lng = baseLng + (rad * Math.sin(ang)) / Math.cos(baseLat * Math.PI/180);
-                    window.map.setView([lat, lng], 13);
+                  var ll2 = getFallbackLatLngForBarangay(mName, rawName, 'sidebar');
+                  if (ll2) {
+                    window.map.setView(ll2, 13);
+                    revealMunicipalitiesPanel(mName, { openBarangays: true, collapseOthers: true });
+                    var muni = getMunicipalityByName(mName) || getMunicipalityByKey(mName) || {};
                     L.popup()
-                      .setLatLng([lat, lng])
-                      .setContent('<strong>' + mName + '</strong><br>' + rawName + '<br><small>No precise marker found</small>')
+                      .setLatLng(ll2)
+                      .setContent('<strong>' + ((muni && muni.name) ? muni.name : mName) + '</strong><br>' + rawName + '<br><small>No precise marker found</small>')
                       .openOn(window.map);
                   }
                 }

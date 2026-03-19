@@ -44,38 +44,9 @@
               </div>
               <button type="button" class="notif-clear-all" id="notif-clear-all" title="Mark all as read">Mark all as read</button>
             </div>
-            <div class="notif-branch-pills" id="notif-branch-pills">
-              <button type="button" class="pill is-active" data-branch="">All (0)</button>
-              <button type="button" class="pill" data-branch="Paranas">Paranas (0)</button>
-              <button type="button" class="pill" data-branch="Catbalogan">Catbalogan (0)</button>
-              <button type="button" class="pill" data-branch="Villareal">Villareal (0)</button>
-              <button type="button" class="pill" data-branch="Basey">Basey (0)</button>
-            </div>
-            <div class="notif-filters">
-              <label class="notif-filter">
-                <span>Branch</span>
-                <select id="notif-branch-filter">
-                  <option value="">All</option>
-                  <option>Paranas</option>
-                  <option>Catbalogan</option>
-                  <option>Villareal</option>
-                  <option>Basey</option>
-                </select>
-              </label>
-              <label class="notif-filter">
-                <span>Municipality</span>
-                <select id="notif-muni-filter">
-                  <option value="">All</option>
-                </select>
-              </label>
-            </div>
             <div class="notif-list" id="notif-list"></div>
             <div class="notif-empty" id="notif-empty">
-              <div class="empty-card">
-                <div class="empty-emoji">🎉</div>
-                <div class="empty-title">No new reports</div>
-                <div class="empty-sub">You’re all caught up. Enjoy the calm.</div>
-              </div>
+              <div class="empty-title">No new reports</div>
             </div>
           </div>
         </div>
@@ -83,8 +54,8 @@
           <a href="dashboard.html" class="nav-link" aria-current="page">Home</a>
           <a href="records.html" class="nav-link">Records</a>
           <a href="analytics.html" class="nav-link">Analytics</a>
-          <a href="about.html" class="nav-link">About</a>
           <a href="contact.html" class="nav-link">Contact</a>
+          <a href="about.html" class="nav-link">About</a>
         </div>
         <span class="nav-user-welcome">Welcome, <span id="user-name">User</span></span>
         <button type="button" class="nav-btn nav-btn-cta" id="logout-btn">Logout</button>
@@ -93,18 +64,13 @@
   </nav>
 
   <section class="map-section" id="map-section">
-    <div class="map-container">
-      <div class="map-header">
-        <h2 class="map-title">Service Coverage Area</h2>
-        <p class="map-subtitle">Explore SAMELCO II Municipalities across Samar</p>
-      </div>
       <div class="map-content-wrapper">
         <div class="map-wrapper">
           <div id="map" class="map-canvas"></div>
         </div>
-        <div class="municipalities-panel">
+        <div id="municipalities-panel" class="municipalities-panel" hidden>
           <h3 class="municipalities-panel-title">MUNICIPALITIES</h3>
-          <p class="municipalities-panel-subtitle">All municipalities and cities in Samar. Click to view barangays.</p>
+          <p class="municipalities-panel-subtitle">Select a map pin to open the municipality list and view barangays.</p>
           <div class="municipalities-controls">
             <label class="issues-toggle"><input type="checkbox" id="issues-only-toggle"> Show issues only</label>
             <label class="issues-toggle"><input type="checkbox" id="sound-alerts-toggle"> Sound alerts</label>

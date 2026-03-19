@@ -74,14 +74,57 @@ document.addEventListener('DOMContentLoaded', function () {
     return nearest;
   }
 
-  function autoSelectMunicipalityFromGps(latitude, longitude) {
+  function normalizeMunicipalityKey(name) {
+    if (!name) return '';
+    var x = String(name).toLowerCase();
+    try { x = x.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } catch (e) {}
+    x = x.replace(/\(wright\)/g, '');
+    x = x.replace(/\bcity\b/g, '');
+    x = x.replace(/\s+/g, ' ').trim();
+    return x;
+  }
+
+  function findBestMunicipalityMatch(candidates) {
+    if (!Array.isArray(candidates) || !candidates.length) return null;
+    if (!Array.isArray(municipalityData) || !municipalityData.length) return null;
+    for (var i = 0; i < candidates.length; i++) {
+      var candKey = normalizeMunicipalityKey(candidates[i]);
+      if (!candKey) continue;
+      var exact = municipalityData.find(function(m){
+        return normalizeMunicipalityKey(m && m.name) === candKey;
+      });
+      if (exact) return exact;
+      var near = municipalityData.find(function(m){
+        var mk = normalizeMunicipalityKey(m && m.name);
+        if (!mk) return false;
+        return candKey.indexOf(mk) !== -1 || mk.indexOf(candKey) !== -1;
+      });
+      if (near) return near;
+    }
+    return null;
+  }
+
+  async function autoSelectMunicipalityFromGps(latitude, longitude) {
     if (!municipalityEl) return null;
+    var detected = null;
     var nearest = findNearestMunicipality(latitude, longitude);
-    if (!nearest) return null;
-    // Always sync municipality to GPS-detected nearest municipality.
-    municipalityEl.value = nearest.name;
+    try {
+      var payload = await reverseGeocode(latitude, longitude);
+      var candidates = extractReverseGeocodeCandidates(payload);
+      detected = findBestMunicipalityMatch(candidates);
+    } catch (e) {}
+    var chosen = detected || nearest;
+    if (detected && nearest && detected.name !== nearest.name) {
+      var dDetected = distanceKm(latitude, longitude, Number(detected.lat), Number(detected.lng));
+      var dNearest = distanceKm(latitude, longitude, Number(nearest.lat), Number(nearest.lng));
+      if (Number.isFinite(dDetected) && Number.isFinite(dNearest) && (dDetected - dNearest) > 2) {
+        chosen = nearest;
+      }
+    }
+    if (!chosen) return null;
+    municipalityEl.value = chosen.name;
     onMunicipalityChange();
-    return nearest.name; // ibalik ang detected para maipakita sa status
+    return chosen.name;
   }
 
   function normalizeBarangayName(name) {
@@ -103,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var out = [];
     if (!payload || typeof payload !== 'object') return out;
     var addr = payload.address || {};
-    var keys = ['suburb', 'village', 'hamlet', 'neighbourhood', 'quarter', 'city_district', 'town', 'city', 'county', 'state_district'];
+    var keys = ['municipality', 'locality', 'district', 'suburb', 'village', 'hamlet', 'neighbourhood', 'quarter', 'city_district', 'town', 'city', 'province', 'state', 'region', 'county', 'state_district'];
     keys.forEach(function(k){
       if (addr[k]) out.push(String(addr[k]));
     });
@@ -119,7 +162,16 @@ document.addEventListener('DOMContentLoaded', function () {
       var m = String(c).match(/\bbarangay\s*(?:no\.?\s*)?(\d+)\b/i);
       if (m && m[1]) out.push('Poblacion ' + m[1]);
     });
-    return out;
+    var seen = {};
+    var uniq = [];
+    out.forEach(function(v){
+      var key = String(v || '').trim().toLowerCase();
+      if (!key) return;
+      if (seen[key]) return;
+      seen[key] = true;
+      uniq.push(String(v).trim());
+    });
+    return uniq;
   }
 
   function findBestBarangayMatch(candidates, barangays) {
@@ -179,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     var excludedSet = (function(){
-      var arr = ['calbayog city','tarangnan','almagro','santo niño','santo niÃ±o','tagapul-an','santa margarita','gandara','pagsanghan','matuguinao','san jorge'];
+      var arr = ['calbayog city','tarangnan','almagro','santo niño','tagapul-an','santa margarita','gandara','pagsanghan','matuguinao','san jorge'];
       var o = {};
       arr.forEach(function(s){ o[s] = true; });
       return o;
@@ -220,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
         lngEl.value = pos.coords.longitude.toFixed(7);
         var lat = Number(latEl.value);
         var lng = Number(lngEl.value);
-        var detectedMunicipality = autoSelectMunicipalityFromGps(lat, lng);
+        var detectedMunicipality = await autoSelectMunicipalityFromGps(lat, lng);
         var detectedBarangay = '';
         if (detectedMunicipality) {
           detectedBarangay = await autoSelectBarangayFromGps(lat, lng, detectedMunicipality);
@@ -240,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }, function () {
         setGpsStatus('Unable to capture GPS. Please enable location permission and try again.', false);
         reject(new Error('Unable to capture GPS'));
-      }, { enableHighAccuracy: true, timeout: 12000 });
+      }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 });
     });
   }
 
