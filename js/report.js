@@ -34,9 +34,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var selected = municipalityEl.value;
     var muni = municipalityData.find(function (m) { return m.name === selected; });
     var barangays = muni && Array.isArray(muni.barangays) ? muni.barangays : [];
-    fillSelectOptions(barangayEl, barangays, 'Select barangay');
-    barangayEl.disabled = !barangays.length;
-    if (!barangays.length) barangayEl.value = '';
+    var barangayNames = barangays.map(function(b) {
+      return (b && typeof b === 'object' && b.name) ? b.name : b;
+    });
+    fillSelectOptions(barangayEl, barangayNames, 'Select barangay');
+    barangayEl.disabled = !barangayNames.length;
+    if (!barangayNames.length) barangayEl.value = '';
   }
 
   function toRadians(value) {
@@ -177,7 +180,8 @@ document.addEventListener('DOMContentLoaded', function () {
   function findBestBarangayMatch(candidates, barangays) {
     if (!Array.isArray(candidates) || !Array.isArray(barangays) || !barangays.length) return '';
     var normalized = barangays.map(function(b){
-      return { raw: b, norm: normalizeBarangayName(b) };
+      var name = (b && typeof b === 'object' && b.name) ? b.name : b;
+      return { raw: name, norm: normalizeBarangayName(name) };
     });
     for (var i = 0; i < candidates.length; i++) {
       var candNorm = normalizeBarangayName(candidates[i]);
@@ -207,7 +211,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!barangayEl || !municipalityName) return '';
     var muni = municipalityData.find(function (m) { return m.name === municipalityName; });
     var barangays = muni && Array.isArray(muni.barangays) ? muni.barangays : [];
-    if (!barangays.length) return '';
+    var barangayNames = barangays.map(function(b) {
+      return (b && typeof b === 'object' && b.name) ? b.name : b;
+    });
+    if (!barangayNames.length) return '';
     try {
       var payload = await reverseGeocode(latitude, longitude);
       var candidates = extractReverseGeocodeCandidates(payload);

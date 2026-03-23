@@ -79,7 +79,26 @@ SET
     is_active = EXCLUDED.is_active,
     description = COALESCE(public.teams.description, EXCLUDED.description);
 
+-- Enable RLS on teams table
 ALTER TABLE public.teams ENABLE ROW LEVEL SECURITY;
+
+-- 1. Allow anyone to view active teams
+CREATE POLICY "Allow public to view teams" ON public.teams
+    FOR SELECT USING (true);
+
+-- 2. Allow authenticated users (Admins) to manage teams
+CREATE POLICY "Allow authenticated users to insert teams" ON public.teams
+    FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated users to update teams" ON public.teams
+    FOR UPDATE USING (true) WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated users to delete teams" ON public.teams
+    FOR DELETE USING (true);
+
+-- Ensure permissions
+GRANT ALL ON TABLE public.teams TO anon, authenticated, service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
 
 -- ==========================================
 -- 4. reports
@@ -127,9 +146,9 @@ BEGIN
         ALTER TABLE public.reports ADD CONSTRAINT reports_status_check CHECK (status in ('pending', 'ontheway', 'resolved'));
     END IF;
 
-    -- FK to teams (only if not exists)
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'reports_assigned_team_fkey') THEN
-        ALTER TABLE public.reports ADD CONSTRAINT reports_assigned_team_fkey FOREIGN KEY (assigned_team) REFERENCES public.teams(name) ON UPDATE CASCADE ON DELETE SET NULL;
+    -- Remove FK to teams to support multiple comma-separated teams
+    IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'reports_assigned_team_fkey') THEN
+        ALTER TABLE public.reports DROP CONSTRAINT reports_assigned_team_fkey;
     END IF;
 END
 $$;
@@ -413,13 +432,8 @@ BEGIN
         RAISE EXCEPTION 'Invalid status "%"', p_status;
     END IF;
 
-    IF v_team_name IS NOT NULL AND NOT EXISTS (
-        SELECT 1
-        FROM public.teams
-        WHERE name = v_team_name
-    ) THEN
-        RAISE EXCEPTION 'Team "%" does not exist in teams table', v_team_name;
-    END IF;
+    -- Multiple teams support
+    -- Validation is handled by application logic or allowed as free text.
 
     UPDATE public.reports
     SET

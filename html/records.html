@@ -29,6 +29,7 @@
           <a href="dashboard.html" class="nav-link">Home</a>
           <a href="records.html" class="nav-link" aria-current="page">Records</a>
           <a href="analytics.html" class="nav-link">Analytics</a>
+          <a href="teams.html" class="nav-link">Teams</a>
           <a href="contact.html" class="nav-link">Contact</a>
           <a href="about.html" class="nav-link">About</a>
         </div>
@@ -78,14 +79,16 @@
               </div>
             </div>
             <div class="records-quick-badges">
-              <button type="button" id="badge-new" class="records-table-badge records-quick-badge-btn">New Compliance <span id="badge-new-count">0</span></button>
-              <button type="button" id="badge-pending" class="records-table-badge records-quick-badge-btn">Pending <span id="badge-pending-count">0</span></button>
+              <button type="button" id="badge-new" class="records-table-badge records-quick-badge-btn badge-new">New Compliance <span id="badge-new-count">0</span></button>
+              <button type="button" id="badge-pending" class="records-table-badge records-quick-badge-btn badge-pending">Pending <span id="badge-pending-count">0</span></button>
+              <button type="button" id="badge-daily" class="records-table-badge records-quick-badge-btn badge-daily">Daily Issues <span id="badge-daily-count">0</span></button>
+              <button type="button" id="badge-assigned" class="records-table-badge records-quick-badge-btn badge-assigned">Assigned <span id="badge-assigned-count">0</span></button>
             </div>
             <div class="records-action-buttons">
               <button type="button" id="reset-restored-btn" class="records-export-btn" title="Clear all restored markers">Reset Restored</button>
               <button type="button" id="clear-filters-btn" class="records-export-btn" title="Clear all filters">Clear Filters</button>
               <button type="button" id="export-excel-btn" class="records-export-btn">
-                <span class="btn-icon">📥</span> Export Excel
+                <span class="btn-icon">📄</span> Export PDF
               </button>
             </div>
           </div>

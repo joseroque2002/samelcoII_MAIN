@@ -12,6 +12,38 @@ document.addEventListener('DOMContentLoaded', function () {
     window.location.href = 'index.html';
   });
 
+  // navigation helpers
+  function handleNavigation(action) {
+    if (action === 'records') window.location.href = 'records.html';
+    else if (action === 'analytics') { /* already here */ }
+    else if (action === 'branches') window.location.href = 'branches.html';
+    else if (action === 'teams') window.location.href = 'teams.html';
+    else if (action === 'about') window.location.href = 'about.html';
+    else if (action === 'contact') window.location.href = 'contact.html';
+  }
+
+  var navDotsBtn = document.getElementById('nav-dots-btn');
+  var navDotsDropdown = document.getElementById('nav-dots-dropdown');
+  if (navDotsBtn && navDotsDropdown) {
+    navDotsBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var isOpen = navDotsDropdown.classList.toggle('is-open');
+      navDotsBtn.setAttribute('aria-expanded', isOpen);
+    });
+    document.addEventListener('click', function() {
+      navDotsDropdown.classList.remove('is-open');
+      navDotsBtn.setAttribute('aria-expanded', 'false');
+    });
+    navDotsDropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+    navDotsDropdown.querySelectorAll('.nav-dots-item').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var action = this.getAttribute('data-action');
+        navDotsDropdown.classList.remove('is-open');
+        handleNavigation(action);
+      });
+    });
+  }
+
   // municipality helpers (shared data comes from municipalities-data.js)
   var MUNICIPALITIES = Array.isArray(window.SAMELCO_MUNICIPALITIES) ? window.SAMELCO_MUNICIPALITIES : [];
   function findMunicipalityByName(name) {
@@ -341,28 +373,70 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  function toUtcDayKeyFromDate(dt) {
+    if (!(dt instanceof Date) || isNaN(dt.getTime())) return '';
+    return dt.toISOString().slice(0, 10);
+  }
+
+  function buildUtcDaySeries(startDayKey, endDayKey, maxDays) {
+    if (!startDayKey || !endDayKey) return [];
+    var start = new Date(startDayKey + 'T00:00:00.000Z');
+    var end = new Date(endDayKey + 'T00:00:00.000Z');
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) return [];
+    if (start.getTime() > end.getTime()) return [];
+    var out = [];
+    var cursor = start;
+    var cap = (typeof maxDays === 'number' && isFinite(maxDays) && maxDays > 0) ? Math.floor(maxDays) : 5000;
+    while (cursor.getTime() <= end.getTime() && out.length < cap) {
+      out.push(toUtcDayKeyFromDate(cursor));
+      cursor = new Date(cursor.getTime());
+      cursor.setUTCDate(cursor.getUTCDate() + 1);
+    }
+    return out;
+  }
+
   function renderPerDayChart(filtered) {
     var canvas = document.getElementById('reports-per-day-chart');
     if (!canvas || typeof Chart === 'undefined') return;
     ensureChartRegistered();
     var counts = countByKey(filtered, function(r){ return toDayKey(r.created_at); });
     delete counts[''];
-    var labels = Object.keys(counts).sort();
+    var rangeVal = elRange ? String(elRange.value || '30d') : '30d';
+    var days = getRangeDays(rangeVal);
+    var labels = [];
+    if (typeof days === 'number' && isFinite(days) && days > 0) {
+      var now = new Date();
+      var endUtc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+      var startUtc = new Date(endUtc.getTime());
+      startUtc.setUTCDate(startUtc.getUTCDate() - (days - 1));
+      labels = buildUtcDaySeries(toUtcDayKeyFromDate(startUtc), toUtcDayKeyFromDate(endUtc), days);
+    } else {
+      var keys = Object.keys(counts).sort();
+      if (!keys.length) {
+        labels = [];
+      } else {
+        var minKey = keys[0];
+        var maxKey = keys[keys.length - 1];
+        var all = buildUtcDaySeries(minKey, maxKey, 5000);
+        var cap = 365;
+        labels = all.length > cap ? all.slice(all.length - cap) : all;
+      }
+    }
     var values = labels.map(function(k){ return counts[k] || 0; });
     var ctx = canvas.getContext('2d');
     if (perDayChart) perDayChart.destroy();
     perDayChart = new Chart(ctx, {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: labels,
         datasets: [{
           label: 'Reports',
           data: values,
           borderColor: '#8b2a2a',
-          backgroundColor: 'rgba(139, 42, 42, 0.12)',
-          tension: 0.25,
-          fill: true,
-          pointRadius: 2
+          backgroundColor: 'rgba(139, 42, 42, 0.28)',
+          borderWidth: 1,
+          barPercentage: 0.8,
+          categoryPercentage: 0.8
         }]
       },
       options: {
@@ -370,7 +444,14 @@ document.addEventListener('DOMContentLoaded', function () {
         maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
-          datalabels: { display: false }
+          datalabels: {
+            display: labels.length <= 45,
+            color: '#111',
+            anchor: 'end',
+            align: 'top',
+            formatter: function(v){ return v ? v : ''; },
+            font: { weight: '600', family: "'Outfit', sans-serif" }
+          }
         },
         scales: {
           y: { beginAtZero: true, ticks: { color: '#0c0c0c', font: { family: "'Outfit', sans-serif" } } },

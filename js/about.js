@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
         else if (action === 'records') window.location.href = 'records.html';
         else if (action === 'analytics') window.location.href = 'analytics.html';
         else if (action === 'branches') window.location.href = 'branches.html';
+        else if (action === 'teams') window.location.href = 'teams.html';
         else if (action === 'etc') window.location.href = 'about.html';
         else if (action === 'contact') window.location.href = 'contact.html';
       });

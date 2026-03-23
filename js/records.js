@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (rpcRes.ok) return;
       var rpcText = '';
       try { rpcText = (await rpcRes.text()) || ''; } catch (_) {}
-      if (rpcRes.status !== 404) {
+      if (rpcRes.status !== 404 && rpcRes.status !== 400) {
         throw new Error('Failed to update status (RPC HTTP ' + rpcRes.status + ')' + (rpcText ? ': ' + rpcText : ''));
       }
       rpcMissing = true;
@@ -509,10 +509,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (show && quickFilter !== 'all') {
         const isRestored = row.getAttribute('data-restored') === 'true';
-        if (isRestored) show = false;
         const isNew = row.getAttribute('data-is-new') === 'true';
-        if (quickFilter === 'new' && !isNew) show = false;
-        if (quickFilter === 'pending' && isNew) show = false;
+        const rowDate = row.getAttribute('data-date');
+        const assignedTeam = (row.getAttribute('data-assigned-team') || '').trim();
+        const today = new Date().toISOString().split('T')[0];
+
+        if (quickFilter === 'new') {
+          if (isRestored || !isNew) show = false;
+        } else if (quickFilter === 'pending') {
+          if (isRestored || isNew) show = false;
+        } else if (quickFilter === 'daily') {
+          if (rowDate !== today) show = false;
+        } else if (quickFilter === 'assigned') {
+          if (!assignedTeam) show = false;
+        }
       }
 
       // assignment filter
@@ -551,6 +561,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var f5 = document.getElementById('mun-filter'); if (f5) f5.value = 'all';
       var f6 = document.getElementById('assigned-filter'); if (f6) f6.value = 'all';
       quickFilter = 'all';
+      if (typeof updateBadgeActiveState === 'function') updateBadgeActiveState();
       applyFilters();
     });
   }
@@ -624,6 +635,7 @@ document.addEventListener('DOMContentLoaded', function () {
         else if (action === 'records') { /* already here */ }
         else if (action === 'analytics') window.location.href = 'analytics.html';
         else if (action === 'branches') window.location.href = 'branches.html';
+        else if (action === 'teams') window.location.href = 'teams.html';
         else if (action === 'about') window.location.href = 'about.html';
         else if (action === 'contact') window.location.href = 'contact.html';
         else if (action === 'etc') window.location.href = 'about.html';
@@ -668,41 +680,166 @@ document.addEventListener('DOMContentLoaded', function () {
   // export button logic separated from filtering
   if (exportBtn && recordsTable) {
     exportBtn.addEventListener('click', function() {
-      const rows = recordsTable.querySelectorAll('.records-table-header, .records-table-row');
-      let csvContent = [];
-
-      rows.forEach(row => {
-        if (row.style.display === 'none') return; // Skip filtered out rows
-        const rowData = [];
-        row.querySelectorAll('span').forEach(cell => {
-          let cellText = cell.innerText.replace(/"/g, '""'); // Escape double quotes
-          rowData.push(`"${cellText}"`);
-        });
-        csvContent.push(rowData.join(","));
+      var visibleRows = Array.from(recordsTable.querySelectorAll('.records-table-row')).filter(function(r){ return r.style.display !== 'none'; });
+      var headers = Array.from(recordsTable.querySelectorAll('.records-table-header span')).map(function(s){ return s.innerText || ''; });
+      
+      var dataRows = visibleRows.map(function(r){
+        return Array.from(r.querySelectorAll('span')).map(function(s){ return s.innerText || ''; });
       });
 
-      const blob = new Blob([csvContent.join("\r\n")], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement("a");
-      const url = URL.createObjectURL(blob);
-      link.setAttribute("href", url);
-      // Build filename from active filters for quick context
-      var parts = ['consumer_records'];
+      var assignedCount = 0;
+      var issueCounts = {};
+      var teamCounts = {};
+      
+      visibleRows.forEach(function(row) {
+        var team = (row.getAttribute('data-assigned-team') || '').trim();
+        var issue = (row.getAttribute('data-status') || '').trim();
+        
+        if (team) {
+          assignedCount++;
+          teamCounts[team] = (teamCounts[team] || 0) + 1;
+        }
+        if (issue) {
+          issueCounts[issue] = (issueCounts[issue] || 0) + 1;
+        }
+      });
+
       var mv = (document.getElementById('mun-filter')||{}).value || 'all';
       var sv = (document.getElementById('status-filter')||{}).value || 'all';
       var av = (document.getElementById('assigned-filter')||{}).value || 'all';
-      var dv = (document.getElementById('records-date')||{}).value || '';
-      var mmv = (document.getElementById('records-month')||{}).value || '';
-      function clean(s){ return String(s).toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-_]/g,''); }
-      if (mv && mv!=='all') parts.push(clean(mv));
-      if (sv && sv!=='all') parts.push(clean(sv));
-      if (av && av!=='all') parts.push('assign-'+clean(av));
-      if (dv) parts.push(dv);
-      if (mmv) parts.push(mmv);
-      link.setAttribute("download", parts.join('_') + ".csv");
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      var now = new Date();
+      
+      var meta = [
+        'Generated: ' + now.toLocaleString(),
+        'Municipality: ' + (mv || 'all'),
+        'Status: ' + (sv || 'all'),
+        'Assignment: ' + (av || 'all')
+      ];
+
+      // Convert counts to HTML lists with creative styling
+      var totalIssues = Object.values(issueCounts).reduce(function(a, b) { return a + b; }, 0);
+      var issueListHtml = Object.keys(issueCounts).sort(function(a,b){ return issueCounts[b] - issueCounts[a]; }).map(function(k){
+        var percent = Math.round((issueCounts[k] / visibleRows.length) * 100);
+        return '<div class="stat-item">' +
+                 '<div class="stat-item-label">' + k + '</div>' +
+                 '<div class="stat-item-value-row">' +
+                   '<div class="stat-bar-bg"><div class="stat-bar-fill" style="width:' + percent + '%;"></div></div>' +
+                   '<span class="stat-count">' + issueCounts[k] + '</span>' +
+                 '</div>' +
+               '</div>';
+      }).join('');
+      
+      var teamListHtml = Object.keys(teamCounts).sort(function(a,b){ return teamCounts[b] - teamCounts[a]; }).map(function(k){
+        return '<div class="stat-item team-item">' +
+                 '<span class="team-dot"></span>' +
+                 '<span class="stat-item-label">' + k + '</span>' +
+                 '<span class="stat-count-badge">' + teamCounts[k] + '</span>' +
+               '</div>';
+      }).join('');
+
+      var statsHtml = '<div class="creative-stats-container">' +
+        '<div class="stats-card">' +
+          '<div class="card-header">Issue Type Distribution</div>' +
+          '<div class="card-body">' + (issueListHtml || '<p>No issues found</p>') + '</div>' +
+        '</div>' +
+        '<div class="stats-card">' +
+          '<div class="card-header">Team Assignments</div>' +
+          '<div class="card-body">' + (teamListHtml || '<p>No teams assigned</p>') + '</div>' +
+        '</div>' +
+        '<div class="stats-card summary-card">' +
+          '<div class="card-header">Report Summary</div>' +
+          '<div class="card-body summary-body">' +
+            '<div class="summary-stat-box">' +
+              '<div class="summary-val">' + visibleRows.length + '</div>' +
+              '<div class="summary-label">Total Records</div>' +
+            '</div>' +
+            '<div class="summary-stat-box assigned-box">' +
+              '<div class="summary-val">' + totalIssues + '</div>' +
+              '<div class="summary-label">Total Issues</div>' +
+            '</div>' +
+            '<div class="summary-stat-box assigned-box" style="border-top:none;">' +
+              '<div class="summary-val">' + assignedCount + '</div>' +
+              '<div class="summary-label">Assigned</div>' +
+            '</div>' +
+            '<div class="summary-footer-info">' +
+              '<span>Generation Date: ' + now.toLocaleDateString() + '</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+      
+      var baseHref = window.location.href;
+      var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Consumer Records</title><base href="' + baseHref + '">' +
+        '<style>' +
+        'html,body{font-family: "Segoe UI", Tahoma, sans-serif; color:#333; margin:0; padding:0;} ' +
+        'body{padding:8mm;} ' +
+        'h1{margin:0 0 0.3rem; font-size:18px; color:#1a1512; border-bottom: 2px solid #8b2a2a; padding-bottom:3px; text-align:center;} ' +
+        '.meta{font-size:10px; color:#666; margin-bottom:12px; font-style: italic; text-align:center;} ' +
+        'table{width:100%; border-collapse:collapse; margin-bottom:15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);} ' +
+        'th{background:#8b2a2a; color:#fff; font-weight:600; text-align:left; text-transform:uppercase; font-size:9px; letter-spacing:0.4px; padding:6px 6px;} ' +
+        'td{border-bottom:1px solid #eee; padding:5px 6px; font-size:8.5px; color:#444;} ' +
+        'tr:nth-child(even){background:#fcfcfc;} ' +
+        '.footer{margin-top:10px; font-size:9px; color:#999; text-align:center; border-top:1px solid #eee; padding-top:6px;} ' +
+        '@page{size: A4 landscape; margin:0;} ' +
+        '.report-header{display:flex; justify-content:center; align-items:center; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid #eee;} ' +
+        '.header-left{display:flex; align-items:center; gap:10px;} ' +
+        '.coop-logo{height:40px;} ' +
+        '.header-text{text-align:left;} ' +
+        '.coop-name{font-size:14px; font-weight:800; color:#8b2a2a; margin:0;} ' +
+        '.coop-branch{font-size:10px; color:#666; margin:0;} ' +
+        
+        /* Creative Stats Styles */
+        '.creative-stats-container{display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; margin-top:10px; page-break-inside: avoid;} ' +
+        '.stats-card{background:#fff; border:1px solid #e0e0e0; border-radius:5px; overflow:hidden; display:flex; flex-direction:column; min-height:100px;} ' +
+        '.card-header{background:#f8f9fa; padding:5px 10px; font-size:10px; font-weight:700; color:#8b2a2a; border-bottom:1px solid #eee; text-align:center;} ' +
+        '.card-body{padding:6px 12px; flex:1; display:flex; flex-direction:column; justify-content:center;} ' +
+        '.stat-item{margin-bottom:4px;} ' +
+        '.stat-item-label{font-size:9px; color:#555; margin-bottom:2px; font-weight:500;} ' +
+        '.stat-item-value-row{display:flex; align-items:center; gap:6px;} ' +
+        '.stat-bar-bg{flex:1; height:4px; background:#f0f0f0; border-radius:2px; overflow:hidden;} ' +
+        '.stat-bar-fill{height:100%; background:linear-gradient(90deg, #8b2a2a, #c53030); border-radius:2px;} ' +
+        '.stat-count{font-size:9px; font-weight:700; color:#1a1512; min-width:16px; text-align:right;} ' +
+        '.stat-total-row{margin-top:5px; padding-top:5px; border-top:1px solid #eee; display:flex; justify-content:space-between; align-items:center;} ' +
+        '.stat-total-label{font-size:8.5px; font-weight:700; color:#666; letter-spacing:0.4px;} ' +
+        '.stat-total-val{font-size:10px; font-weight:800; color:#8b2a2a;} ' +
+        '.team-item{display:flex; align-items:center; gap:6px; margin-bottom:3px; padding-bottom:3px; border-bottom:1px dashed #eee;} ' +
+        '.team-dot{width:5px; height:5px; background:#8b2a2a; border-radius:50%;} ' +
+        '.stat-count-badge{margin-left:auto; background:#8b2a2a; color:#fff; padding:1px 5px; border-radius:6px; font-size:8.5px; font-weight:600;} ' +
+        '.summary-card{background:linear-gradient(135deg, #8b2a2a 0%, #4a1414 100%); border:none;} ' +
+        '.summary-card .card-header{background:rgba(255,255,255,0.1); color:#fff; border-bottom:1px solid rgba(255,255,255,0.1);} ' +
+        '.summary-body{display:flex; flex-direction:column; justify-content:center; align-items:center; color:#fff; gap:6px; padding:10px;} ' +
+        '.summary-stat-box{text-align:center; width:100%; padding:2px 0;} ' +
+        '.summary-val{font-size:20px; font-weight:800; line-height:1;} ' +
+        '.summary-label{font-size:8.5px; opacity:0.8; text-transform:uppercase; letter-spacing:0.8px; margin-top:1px;} ' +
+        '.assigned-box{border-top:1px solid rgba(255,255,255,0.1); border-bottom:1px solid rgba(255,255,255,0.1);} ' +
+        '.summary-footer-info{font-size:7.5px; opacity:0.6; margin-top:2px;} ' +
+        '</style></head><body>' +
+        '<div class="report-header">' +
+          '<div class="header-left">' +
+            '<img class="coop-logo" src="../assets/images/logo.png" alt="SAMELCO II logo">' +
+            '<div class="header-text">' +
+              '<div class="coop-name">SAMAR II ELECTRIC COOPERATIVE, INC.</div>' +
+              '<div class="coop-branch">Paranas, Samar - Consumer Service Department</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<h1>Consumer Records Report</h1>' +
+        '<div class="meta">Filtered Results • ' + meta.join(' • ') + '</div>' +
+        '<table><thead><tr>' +
+        headers.map(function(h){ return '<th>' + h + '</th>'; }).join('') +
+        '</tr></thead><tbody>' +
+        dataRows.map(function(row){ return '<tr>' + row.map(function(c){ return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') +
+        '</tbody></table>' +
+        statsHtml +
+        '<div class="footer">SAMELCO II System • Secure Consumer Records Management • ' + now.getFullYear() + '</div>' +
+        '</body></html>';
+      var win = window.open('', '_blank');
+      if (!win) return;
+      win.document.open();
+      win.document.write(html);
+      win.document.close();
+      win.focus();
+      setTimeout(function(){ try { win.print(); } catch(_){} try { win.close(); } catch(_){} }, 200);
     });
   }
 
@@ -710,22 +847,38 @@ document.addEventListener('DOMContentLoaded', function () {
   function updateCounts(prefNew, prefPending) {
     var newEl = document.getElementById('badge-new-count');
     var pendEl = document.getElementById('badge-pending-count');
-    if (!newEl || !pendEl) return;
-    if (typeof prefNew === 'number' && typeof prefPending === 'number') {
-      newEl.textContent = String(prefNew);
-      pendEl.textContent = String(prefPending);
-      return;
-    }
+    var dailyEl = document.getElementById('badge-daily-count');
+    var assignedEl = document.getElementById('badge-assigned-count');
+    
+    if (!newEl || !pendEl || !dailyEl || !assignedEl) return;
+    
     var rows = document.querySelectorAll('.records-table-row');
-    var n = 0, p = 0;
+    var n = 0, p = 0, d = 0, a = 0;
+    
+    var today = new Date().toISOString().split('T')[0];
+    
     rows.forEach(function(row){
       var isRestored = row.getAttribute('data-restored') === 'true';
-      if (isRestored) return;
       var isNew = row.getAttribute('data-is-new') === 'true';
-      if (isNew) n++; else p++;
+      var rowDate = row.getAttribute('data-date');
+      var assignedTeam = (row.getAttribute('data-assigned-team') || '').trim();
+      
+      // Daily Issues (issues created today)
+      if (rowDate === today) d++;
+      
+      // Assigned (those that have a team assigned)
+      if (assignedTeam) a++;
+      
+      // New & Pending (only for un-restored ones)
+      if (!isRestored) {
+        if (isNew) n++; else p++;
+      }
     });
+    
     newEl.textContent = String(n);
     pendEl.textContent = String(p);
+    dailyEl.textContent = String(d);
+    assignedEl.textContent = String(a);
   }
 
   function populateMunicipalityFilter(list) {
@@ -746,8 +899,40 @@ document.addEventListener('DOMContentLoaded', function () {
   if (munSel) munSel.addEventListener('change', applyFilters);
   var badgeNew = document.getElementById('badge-new');
   var badgePending = document.getElementById('badge-pending');
-  if (badgeNew) badgeNew.addEventListener('click', function(){ quickFilter = (quickFilter === 'new') ? 'all' : 'new'; applyFilters(); });
-  if (badgePending) badgePending.addEventListener('click', function(){ quickFilter = (quickFilter === 'pending') ? 'all' : 'pending'; applyFilters(); });
+  var badgeDaily = document.getElementById('badge-daily');
+  var badgeAssigned = document.getElementById('badge-assigned');
+  
+  if (badgeNew) badgeNew.addEventListener('click', function(){
+    quickFilter = (quickFilter === 'new') ? 'all' : 'new';
+    updateBadgeActiveState();
+    applyFilters();
+  });
+  if (badgePending) badgePending.addEventListener('click', function(){
+    quickFilter = (quickFilter === 'pending') ? 'all' : 'pending';
+    updateBadgeActiveState();
+    applyFilters();
+  });
+  if (badgeDaily) badgeDaily.addEventListener('click', function(){
+    quickFilter = (quickFilter === 'daily') ? 'all' : 'daily';
+    updateBadgeActiveState();
+    applyFilters();
+  });
+  if (badgeAssigned) badgeAssigned.addEventListener('click', function(){
+    quickFilter = (quickFilter === 'assigned') ? 'all' : 'assigned';
+    updateBadgeActiveState();
+    applyFilters();
+  });
+
+  function updateBadgeActiveState() {
+    [badgeNew, badgePending, badgeDaily, badgeAssigned].forEach(function(b){
+      if (!b) return;
+      b.classList.remove('is-active');
+    });
+    if (quickFilter === 'new' && badgeNew) badgeNew.classList.add('is-active');
+    if (quickFilter === 'pending' && badgePending) badgePending.classList.add('is-active');
+    if (quickFilter === 'daily' && badgeDaily) badgeDaily.classList.add('is-active');
+    if (quickFilter === 'assigned' && badgeAssigned) badgeAssigned.classList.add('is-active');
+  }
 
   var recModal = document.getElementById('record-modal');
   var closeRec = document.getElementById('close-record-modal');

@@ -131,9 +131,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var selected = signupMunicipalityEl.value;
     var muni = municipalityDataset.find(function (m) { return m.name === selected; });
     var barangays = muni && Array.isArray(muni.barangays) ? muni.barangays : [];
-    fillSelectOptions(signupBarangayEl, barangays, 'Select barangay');
-    signupBarangayEl.disabled = !barangays.length;
-    if (!barangays.length) signupBarangayEl.value = '';
+    var barangayNames = barangays.map(function(b) {
+      return (b && typeof b === 'object' && b.name) ? b.name : b;
+    });
+    fillSelectOptions(signupBarangayEl, barangayNames, 'Select barangay');
+    signupBarangayEl.disabled = !barangayNames.length;
+    if (!barangayNames.length) signupBarangayEl.value = '';
   }
 
   function initSignupLocationOptions() {
