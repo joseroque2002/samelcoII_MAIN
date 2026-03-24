@@ -354,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // comprehensive check for Samar municipalities - Must match dashboard names exactly
         const samarMuns = [
           'Almagro', 'Basey', 'Calbayog City', 'Calbiga', 'Catbalogan City', 'Daram', 'Gandara', 
-          'Hinabangan', 'Jiabong', 'Marabut', 'Matuguinao', 'Motiong', 'Pagsanghan', 
+          'Hinabangan', 'Jiabong', 'Marabut', 'Matuguinao', 'Motiong', 
           'Paranas (Wright)', 'Pinabacdao', 'San Jorge', 'San Jose de Buan', 
           'San Sebastian', 'Santa Margarita', 'Santa Rita', 'Santo Niño', 
           'Tagapul-an', 'Talalora', 'Tarangnan', 'Villareal', 'Zumarraga'
