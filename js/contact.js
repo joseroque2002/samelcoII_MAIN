@@ -54,24 +54,24 @@ document.addEventListener('DOMContentLoaded', function () {
   var bannerCallBtn = document.getElementById('call-now-btn');
   var bannerEmailBtn = document.getElementById('email-support-btn');
   if (bannerCallBtn) bannerCallBtn.addEventListener('click', function(){ window.location.href = 'tel:+63561234567'; });
-  if (bannerEmailBtn) bannerEmailBtn.addEventListener('click', function(){ window.location.href = 'mailto:support@samelco2.ph'; });
+  if (bannerEmailBtn) bannerEmailBtn.addEventListener('click', function(){ window.location.href = 'mailto:support@samelcodos.ph'; });
 
   document.querySelectorAll('.contact-action').forEach(function(btn){
     btn.addEventListener('click', function(){
       var action = this.getAttribute('data-action');
-      if (action === 'open-website') window.open('https://www.samelco2s.com', '_blank', 'noopener');
+      if (action === 'open-website') window.open('https://www.samelcodos.com', '_blank', 'noopener');
       else if (action === 'copy-website') copyText(getText('website-text'));
-      else if (action === 'email-support') window.location.href = 'mailto:support@samelco2.ph';
+      else if (action === 'email-support') window.location.href = 'mailto:support@samelcodos.ph';
       else if (action === 'copy-email') copyText(getText('email-text'));
       else if (action === 'call-phone') window.location.href = 'tel:+63561234567';
       else if (action === 'copy-phone') copyText(getText('phone-text'));
       else if (action === 'add-contacts') {
-        var v = 'BEGIN:VCARD\nVERSION:3.0\nFN:SAMELCO II Support\nTEL;TYPE=work,voice:+63 56 123 4567\nEMAIL:support@samelco2.ph\nEND:VCARD';
+        var v = 'BEGIN:VCARD\nVERSION:3.0\nFN:SAMELCO II Support\nTEL;TYPE=work,voice:+63 56 123 4567\nEMAIL:support@samelcodos.ph\nEND:VCARD';
         var blob = new Blob([v], { type: 'text/vcard' });
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.href = url;
-        a.download = 'samelco2-support.vcf';
+        a.download = 'samelcodos-support.vcf';
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (sendEmailBtn) {
     sendEmailBtn.addEventListener('click', function(){
       var msg = buildMessage();
-      var mailto = 'mailto:support@samelco2.ph?subject=' + encodeURIComponent('Contact Request') + '&body=' + encodeURIComponent(msg);
+      var mailto = 'mailto:support@samelcodos.ph?subject=' + encodeURIComponent('Contact Request') + '&body=' + encodeURIComponent(msg);
       window.location.href = mailto;
     });
   }

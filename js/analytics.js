@@ -424,6 +424,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     var values = labels.map(function(k){ return counts[k] || 0; });
     var ctx = canvas.getContext('2d');
+    
+    // Create gradient
+    var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(139, 42, 42, 0.85)');
+    gradient.addColorStop(1, 'rgba(139, 42, 42, 0.2)');
+
     if (perDayChart) perDayChart.destroy();
     perDayChart = new Chart(ctx, {
       type: 'bar',
@@ -432,30 +438,49 @@ document.addEventListener('DOMContentLoaded', function () {
         datasets: [{
           label: 'Reports',
           data: values,
+          backgroundColor: gradient,
           borderColor: '#8b2a2a',
-          backgroundColor: 'rgba(139, 42, 42, 0.28)',
-          borderWidth: 1,
-          barPercentage: 0.8,
-          categoryPercentage: 0.8
+          borderWidth: 1.5,
+          borderRadius: 6,
+          barPercentage: 0.7,
+          categoryPercentage: 0.7,
+          hoverBackgroundColor: '#8b2a2a'
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        animation: { duration: 1500, easing: 'easeOutQuart' },
         plugins: {
           legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(26, 21, 18, 0.9)',
+            padding: 12,
+            titleFont: { size: 14, weight: 'bold', family: "'Outfit', sans-serif" },
+            bodyFont: { size: 13, family: "'Outfit', sans-serif" },
+            cornerRadius: 10,
+            displayColors: false
+          },
           datalabels: {
             display: labels.length <= 45,
-            color: '#111',
+            color: '#8b2a2a',
             anchor: 'end',
             align: 'top',
+            offset: 4,
             formatter: function(v){ return v ? v : ''; },
-            font: { weight: '600', family: "'Outfit', sans-serif" }
+            font: { weight: '700', family: "'Outfit', sans-serif", size: 12 }
           }
         },
         scales: {
-          y: { beginAtZero: true, ticks: { color: '#0c0c0c', font: { family: "'Outfit', sans-serif" } } },
-          x: { ticks: { color: '#000', font: { family: "'Outfit', sans-serif" }, maxRotation: 0, autoSkip: true } }
+          y: { 
+            beginAtZero: true, 
+            grid: { color: 'rgba(0, 0, 0, 0.05)', borderDash: [5, 5] },
+            ticks: { color: '#666', font: { family: "'Outfit', sans-serif", size: 11 } } 
+          },
+          x: { 
+            grid: { display: false },
+            ticks: { color: '#666', font: { family: "'Outfit', sans-serif", size: 11 }, maxRotation: 45, minRotation: 45, autoSkip: true } 
+          }
         }
       }
     });
@@ -469,8 +494,18 @@ document.addEventListener('DOMContentLoaded', function () {
     var top = topEntries(counts, 8);
     var labels = top.map(function(e){ return e.key; });
     var values = top.map(function(e){ return e.value; });
-    var colors = colorPalette(values.length);
+    
     var ctx = canvas.getContext('2d');
+    
+    // Create custom gradients for each bar
+    var baseColors = ['#8b2a2a', '#dc2626', '#f59e0b', '#059669', '#3b82f6', '#7c3aed', '#0ea5e9', '#14b8a6'];
+    var gradients = baseColors.map(function(color) {
+      var g = ctx.createLinearGradient(0, 0, 0, 400);
+      g.addColorStop(0, color);
+      g.addColorStop(1, 'rgba(255, 255, 255, 0.1)');
+      return g;
+    });
+
     if (topMuniChart) topMuniChart.destroy();
     topMuniChart = new Chart(ctx, {
       type: 'bar',
@@ -479,27 +514,45 @@ document.addEventListener('DOMContentLoaded', function () {
         datasets: [{
           label: 'Reports',
           data: values,
-          backgroundColor: colors,
-          borderColor: colors,
-          borderWidth: 1
+          backgroundColor: gradients,
+          borderColor: baseColors,
+          borderWidth: 1.5,
+          borderRadius: 6,
+          barPercentage: 0.6,
+          categoryPercentage: 0.6
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        animation: { duration: 1800, easing: 'easeOutElastic' },
         plugins: {
           legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(26, 21, 18, 0.9)',
+            padding: 12,
+            cornerRadius: 10,
+            displayColors: true
+          },
           datalabels: {
-            color: '#111',
+            color: '#1a1512',
             anchor: 'end',
             align: 'top',
+            offset: 4,
             formatter: function(v){ return v; },
-            font: { weight: '600', family: "'Outfit', sans-serif" }
+            font: { weight: '700', family: "'Outfit', sans-serif", size: 12 }
           }
         },
         scales: {
-          y: { beginAtZero: true, ticks: { color: '#0c0c0c', font: { family: "'Outfit', sans-serif" } } },
-          x: { ticks: { color: '#000', font: { family: "'Outfit', sans-serif" } } }
+          y: { 
+            beginAtZero: true, 
+            grid: { color: 'rgba(0, 0, 0, 0.05)', borderDash: [5, 5] },
+            ticks: { color: '#666', font: { family: "'Outfit', sans-serif" } } 
+          },
+          x: { 
+            grid: { display: false },
+            ticks: { color: '#666', font: { family: "'Outfit', sans-serif" } } 
+          }
         }
       }
     });
@@ -517,8 +570,16 @@ document.addEventListener('DOMContentLoaded', function () {
     var top = topEntries(counts, 8);
     var labels = top.map(function(e){ return e.key; });
     var values = top.map(function(e){ return e.value; });
-    var colors = colorPalette(values.length).map(function(c){ return c; });
+    
     var ctx = canvas.getContext('2d');
+    var baseColors = ['#f59e0b', '#059669', '#3b82f6', '#7c3aed', '#0ea5e9', '#14b8a6', '#f97316', '#ef4444'];
+    var gradients = baseColors.map(function(color) {
+      var g = ctx.createLinearGradient(0, 0, 0, 400);
+      g.addColorStop(0, color);
+      g.addColorStop(1, 'rgba(255, 255, 255, 0.1)');
+      return g;
+    });
+
     if (topBarangayChart) topBarangayChart.destroy();
     topBarangayChart = new Chart(ctx, {
       type: 'bar',
@@ -527,27 +588,44 @@ document.addEventListener('DOMContentLoaded', function () {
         datasets: [{
           label: 'Reports',
           data: values,
-          backgroundColor: colors,
-          borderColor: colors,
-          borderWidth: 1
+          backgroundColor: gradients,
+          borderColor: baseColors,
+          borderWidth: 1.5,
+          borderRadius: 6,
+          barPercentage: 0.6,
+          categoryPercentage: 0.6
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        animation: { duration: 2000, easing: 'easeOutCubic' },
         plugins: {
           legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(26, 21, 18, 0.9)',
+            padding: 12,
+            cornerRadius: 10
+          },
           datalabels: {
-            color: '#111',
+            color: '#1a1512',
             anchor: 'end',
             align: 'top',
+            offset: 4,
             formatter: function(v){ return v; },
-            font: { weight: '600', family: "'Outfit', sans-serif" }
+            font: { weight: '700', family: "'Outfit', sans-serif", size: 12 }
           }
         },
         scales: {
-          y: { beginAtZero: true, ticks: { color: '#0c0c0c', font: { family: "'Outfit', sans-serif" } } },
-          x: { ticks: { color: '#000', font: { family: "'Outfit', sans-serif" } } }
+          y: { 
+            beginAtZero: true, 
+            grid: { color: 'rgba(0, 0, 0, 0.05)', borderDash: [5, 5] },
+            ticks: { color: '#666', font: { family: "'Outfit', sans-serif" } } 
+          },
+          x: { 
+            grid: { display: false },
+            ticks: { color: '#666', font: { family: "'Outfit', sans-serif" } } 
+          }
         }
       }
     });
