@@ -87,12 +87,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var closeMissionBtn = document.getElementById('close-mission-btn');
   var missionList = document.getElementById('mission-list');
 
-  var personnelModal = document.getElementById('personnel-modal');
-  var managePersonnelBtn = document.getElementById('manage-personnel-btn');
-  var closePersonnelBtn = document.getElementById('close-personnel-btn');
-  var savePersonnelBtn = document.getElementById('save-personnel-btn');
-  var newPersonnelInput = document.getElementById('new-personnel-name');
-  var personnelListEl = document.getElementById('personnel-list');
   var personnelDatalist = document.getElementById('personnel-datalist');
 
   var allTeams = [];
@@ -142,24 +136,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updatePersonnelUI() {
-    if (personnelListEl) {
-      personnelListEl.innerHTML = '';
-      allPersonnel.forEach(function(p) {
-        var item = document.createElement('div');
-        item.className = 'personnel-item';
-        item.innerHTML = 
-          '<span class="personnel-name">' + escapeHtml(p.full_name) + '</span>' +
-          '<button type="button" class="delete-personnel-btn" data-id="' + p.id + '" title="Remove Member">🗑️</button>';
-        
-        item.querySelector('.delete-personnel-btn').addEventListener('click', function() {
-          if (confirm('Are you sure you want to remove ' + p.full_name + '?')) {
-            deletePersonnel(p.id);
-          }
-        });
-        personnelListEl.appendChild(item);
-      });
-    }
-
     if (personnelDatalist) {
       personnelDatalist.innerHTML = '';
       allPersonnel.forEach(function(p) {
@@ -167,50 +143,6 @@ document.addEventListener('DOMContentLoaded', function () {
         opt.value = p.full_name;
         personnelDatalist.appendChild(opt);
       });
-    }
-  }
-
-  async function savePersonnel() {
-    var name = newPersonnelInput.value.trim();
-    if (!name) return;
-
-    try {
-      var res = await fetch(supabaseCfg.url + '/rest/v1/personnel', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          apikey: supabaseCfg.anonKey,
-          Authorization: 'Bearer ' + supabaseCfg.anonKey
-        },
-        body: JSON.stringify({ full_name: name })
-      });
-      if (res.ok) {
-        newPersonnelInput.value = '';
-        await loadPersonnel();
-      } else {
-        alert('Failed to save personnel');
-      }
-    } catch (err) {
-      alert('Error saving personnel');
-    }
-  }
-
-  async function deletePersonnel(id) {
-    try {
-      var res = await fetch(supabaseCfg.url + '/rest/v1/personnel?id=eq.' + id, {
-        method: 'DELETE',
-        headers: {
-          apikey: supabaseCfg.anonKey,
-          Authorization: 'Bearer ' + supabaseCfg.anonKey
-        }
-      });
-      if (res.ok) {
-        await loadPersonnel();
-      } else {
-        alert('Failed to delete personnel');
-      }
-    } catch (err) {
-      alert('Error deleting personnel');
     }
   }
 
@@ -650,22 +582,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (saveTeamBtn) {
     saveTeamBtn.addEventListener('click', saveNewTeam);
-  }
-
-  if (managePersonnelBtn) {
-    managePersonnelBtn.addEventListener('click', function() {
-      personnelModal.style.display = 'block';
-    });
-  }
-
-  if (closePersonnelBtn) {
-    closePersonnelBtn.addEventListener('click', function() {
-      personnelModal.style.display = 'none';
-    });
-  }
-
-  if (savePersonnelBtn) {
-    savePersonnelBtn.addEventListener('click', savePersonnel);
   }
 
   function escapeHtml(value) {
