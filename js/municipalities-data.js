@@ -29,7 +29,7 @@ window.SAMELCO_MUNICIPALITIES = [
       { name: 'Jose Roño', lat: 11.71, lng: 125.10 },
       { name: 'Lawaan I', lat: 11.70, lng: 125.11 },
       { name: 'Lawaan II', lat: 11.70, lng: 125.12 },
-      { name: 'Lipata', lat: 11.7843, lng: 125.0167 },
+      { name: 'Lipata', lat: 11.788, lng: 125.016 },
       { name: 'Lokilokon', lat: 11.69, lng: 125.13 },
       { name: 'Mangcal', lat: 11.78, lng: 125.02 },
       { name: 'Maylobe', lat: 11.72, lng: 125.10 },

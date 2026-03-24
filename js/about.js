@@ -80,7 +80,52 @@ document.addEventListener('DOMContentLoaded', function () {
     { name: 'Matuguinao', lat: 12.1333, lng: 124.8833, barangays: ['Angyap', 'Bag-otan', 'Barruz', 'Camonoan', 'Carolina', 'Deit', 'Del Rosario', 'Inubod', 'Libertad', 'Ligaya', 'Mabuligon Poblacion', 'Maduroto Poblacion', 'Mahanud', 'Mahayag', 'Nagpapacao', 'Rizal', 'Salvacion', 'San Isidro', 'San Roque', 'Santa Cruz'] },
     { name: 'Motiong', lat: 11.7782, lng: 124.9986, barangays: ['Angyap', 'Barayong', 'Bayog', 'Beri', 'Bonga', 'Calantawan', 'Calapi', 'Caluyahan', 'Canatuan', 'Candomacol', 'Canvais', 'Capaysagan', 'Caranas', 'Caulayanan', 'Hinica-an', 'Inalad', 'Linonoban', 'Malobago', 'Malonoy', 'Mararangsi', 'Maypange', 'New Minarog', 'Oyandic', 'Pamamasan', 'Poblacion I', 'Poblacion I-A', 'Pusongan', 'San Andres', 'Santo Niño', 'Sarao'] },
     { name: 'Pagsanghan', lat: 11.9667, lng: 124.7167, barangays: ['Bangon', 'Buenos Angeles', 'Calanyugan', 'Caloloma', 'Cambaye', 'Canlapwas', 'Libertad', 'Pañge', 'San Luis', 'Santo Niño', 'Viejo', 'Villahermosa Occidental', 'Villahermosa Oriental'] },
-    { name: 'Paranas (Wright)', lat: 11.7715, lng: 125.0225, barangays: ['Anagasi', 'Apolonia', 'Bagsa', 'Balbagan', 'Bato', 'Buray', 'Cantaguic', 'Cantao-an', 'Cantato', 'Casandig I', 'Casandig II', 'Cawayan', 'Concepcion', 'Jose Roño', 'Lawaan I', 'Lawaan II', 'Lipata', 'Lokilok n', 'Mangcal', 'Maylobe', 'Minarog', 'Nawi', 'Pabanog', 'Paco', 'Pagsa-ogan', 'Pagsanjan', 'Patag', 'Pequit', 'Poblacion 1', 'Poblacion 2', 'Poblacion 3', 'Poblacion 4', 'Poblacion 5', 'Poblacion 6', 'Salay', 'San Isidro', 'Santo Niño', 'Sulopan', 'Tabucan', 'Tapul', 'Tenani', 'Tigbawon', 'Tula', 'Tutubigan'] },
+    { name: 'Paranas (Wright)', lat: 11.7715, lng: 125.0225, barangays: [
+      { name: 'Anagasi', lat: 11.80, lng: 125.05 },
+      { name: 'Apolonia', lat: 11.78, lng: 125.08 },
+      { name: 'Bagsa', lat: 11.79, lng: 125.04 },
+      { name: 'Balbagan', lat: 11.75, lng: 125.06 },
+      { name: 'Bato', lat: 11.77, lng: 125.03 },
+      { name: 'Buray', lat: 11.7753, lng: 125.0387 },
+      { name: 'Cantaguic', lat: 11.73, lng: 125.08 },
+      { name: 'Cantao-an', lat: 11.79, lng: 125.05 },
+      { name: 'Cantato', lat: 11.76, lng: 125.07 },
+      { name: 'Casandig I', lat: 11.74, lng: 125.04 },
+      { name: 'Casandig II', lat: 11.74, lng: 125.05 },
+      { name: 'Cawayan', lat: 11.7931, lng: 125.0318 },
+      { name: 'Concepcion', lat: 11.72, lng: 125.09 },
+      { name: 'Jose Roño', lat: 11.71, lng: 125.10 },
+      { name: 'Lawaan I', lat: 11.70, lng: 125.11 },
+      { name: 'Lawaan II', lat: 11.70, lng: 125.12 },
+      { name: 'Lipata', lat: 11.788, lng: 125.016 },
+      { name: 'Lokilok n', lat: 11.69, lng: 125.13 },
+      { name: 'Mangcal', lat: 11.78, lng: 125.02 },
+      { name: 'Maylobe', lat: 11.72, lng: 125.10 },
+      { name: 'Minarog', lat: 11.79, lng: 125.02 },
+      { name: 'Nawi', lat: 11.71, lng: 125.11 },
+      { name: 'Pabanog', lat: 11.76, lng: 125.01 },
+      { name: 'Paco', lat: 11.75, lng: 125.02 },
+      { name: 'Pagsa-ogan', lat: 11.73, lng: 125.03 },
+      { name: 'Pagsanjan', lat: 11.72, lng: 125.04 },
+      { name: 'Patag', lat: 11.71, lng: 125.05 },
+      { name: 'Pequit', lat: 11.80, lng: 125.03 },
+      { name: 'Poblacion 1', lat: 11.77, lng: 125.02 },
+      { name: 'Poblacion 2', lat: 11.77, lng: 125.02 },
+      { name: 'Poblacion 3', lat: 11.77, lng: 125.02 },
+      { name: 'Poblacion 4', lat: 11.77, lng: 125.02 },
+      { name: 'Poblacion 5', lat: 11.77, lng: 125.02 },
+      { name: 'Poblacion 6', lat: 11.77, lng: 125.02 },
+      { name: 'Salay', lat: 11.78, lng: 125.07 },
+      { name: 'San Isidro', lat: 11.70, lng: 125.06 },
+      { name: 'Santo Niño', lat: 11.69, lng: 125.07 },
+      { name: 'Sulopan', lat: 11.68, lng: 125.08 },
+      { name: 'Tabucan', lat: 11.67, lng: 125.09 },
+      { name: 'Tapul', lat: 11.66, lng: 125.10 },
+      { name: 'Tenani', lat: 11.65, lng: 125.11 },
+      { name: 'Tigbawon', lat: 11.76, lng: 125.00 },
+      { name: 'Tula', lat: 11.64, lng: 125.12 },
+      { name: 'Tutubigan', lat: 11.63, lng: 125.13 },
+    ] },
     { name: 'Pinabacdao', lat: 11.6167, lng: 124.9833, barangays: ['Bangon', 'Barangay I', 'Barangay II', 'Botoc', 'Bugho', 'Calampong', 'Canlobo', 'Catigawan', 'Dolores', 'Lale', 'Lawaan', 'Laygayon', 'Layo', 'Loctob', 'Madalunot', 'Magdawat', 'Mambog', 'Manaing', 'Nabong', 'Obayan', 'Pahug', 'Parasanon', 'Pelaon', 'San Isidro'] },
     { name: 'San Jorge', lat: 11.3000, lng: 125.0833, barangays: ['Anquiana', 'Aurora', 'Bay-ang', 'Blanca Aurora', 'Buenavista I', 'Buenavista II', 'Bulao', 'Bungliw', 'Cabugao', 'Cag-olo-olo', 'Calundan', 'Cantaguic', 'Canyaki', 'Cogtoto-og', 'Erenas', 'Gayondato', 'Guadalupe', 'Guindapunan', 'Hernandez', 'Himay', 'Janipon', 'La Paz', 'Libertad', 'Lincoro', 'Mabuhay', 'Mancol', 'Matalud', 'Mobo-ob', 'Mombon', 'Puhagan', 'Quezon', 'Ranera', 'Rawis', 'Rosalim', 'San Isidro', 'San Jorge I', 'San Jorge II', 'San Juan', 'Sapinit', 'Sinit-an', 'Tomogbong'] },
     { name: 'San Jose de Buan', lat: 12.0500, lng: 125.0333, barangays: ['Aguingayan', 'Babaclayon', 'Barangay 1', 'Barangay 2', 'Barangay 3', 'Barangay 4', 'Can-aponte', 'Cataydongan', 'Gusa', 'Hagbay', 'Hibaca-an', 'Hiduroma', 'Hilumot', 'San Nicolas'] },
@@ -120,7 +165,8 @@ document.addEventListener('DOMContentLoaded', function () {
         m.barangays.forEach(function(b) {
           var bItem = document.createElement('div');
           bItem.className = 'barangay-item-sidebar';
-          bItem.textContent = b;
+          var bName = typeof b === 'object' && b.name ? b.name : b;
+          bItem.textContent = bName;
           bList.appendChild(bItem);
         });
       }
