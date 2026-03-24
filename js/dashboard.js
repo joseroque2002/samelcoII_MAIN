@@ -511,6 +511,31 @@ document.addEventListener('DOMContentLoaded', function () {
           var bItem = document.createElement('div');
           bItem.className = 'barangay-item-sidebar';
           bItem.textContent = b;
+          
+          // Add click listener for individual barangays to zoom to their GeoJSON center
+          bItem.addEventListener('click', function(ev) {
+            ev.stopPropagation(); // prevent municipality collapse
+            var bName = b;
+            var mName = m.name;
+            var fallback = getFallbackLatLngForBarangay(mName, bName, 'sidebar-zoom');
+            if (fallback && window.map) {
+              window.map.setView(fallback, 13);
+              
+              // Find the marker for this barangay if it exists
+              var idxKey = getMunicipalityIndexKey(mName) + '|' + normalizeBarangayName(bName);
+              var mk = reportMarkersIndex[idxKey];
+              if (mk) {
+                mk.openPopup();
+              } else {
+                // Otherwise show a temporary popup at the center
+                L.popup()
+                  .setLatLng(fallback)
+                  .setContent('<strong>' + mName + '</strong><br>' + bName)
+                  .openOn(window.map);
+              }
+            }
+          });
+          
           bList.appendChild(bItem);
         });
       }
@@ -1594,7 +1619,56 @@ document.addEventListener('DOMContentLoaded', function () {
       return normalizeMunicipalityKey(m.name) === k;
     }) || null;
   }
+  function getCentroidOfFeature(feature) {
+    if (!feature || !feature.geometry) return null;
+    var coords = feature.geometry.coordinates;
+    var type = feature.geometry.type;
+    var flat = [];
+    if (type === 'Polygon') {
+      flat = coords[0];
+    } else if (type === 'MultiPolygon') {
+      coords.forEach(function(poly) {
+        flat = flat.concat(poly[0]);
+      });
+    }
+    if (!flat.length) return null;
+    var sumLat = 0, sumLng = 0;
+    flat.forEach(function(p) {
+      sumLng += p[0];
+      sumLat += p[1];
+    });
+    return [sumLat / flat.length, sumLng / flat.length];
+  }
+
   function getFallbackLatLngForBarangay(municipalityName, barangayName, seed) {
+    var mName = (municipalityName || '').toLowerCase().trim();
+    var bName = (barangayName || '').toLowerCase().replace(/^brgy\.?\s*/i, '').trim();
+
+    // 1. Try to find in GeoJSON for actual centroid
+    if (window.SAMELCO_COVERAGE_GEOJSON && window.SAMELCO_COVERAGE_GEOJSON.features) {
+      var feature = window.SAMELCO_COVERAGE_GEOJSON.features.find(function(f) {
+        var fBrgy = (f.properties.NAME_3 || '').toLowerCase().trim();
+        var fMuni = (f.properties.NAME_2 || '').toLowerCase().trim();
+        return (fBrgy === bName || fBrgy.indexOf(bName) !== -1 || bName.indexOf(fBrgy) !== -1) &&
+               (fMuni === mName || fMuni.indexOf(mName) !== -1 || mName.indexOf(fMuni) !== -1);
+      });
+      if (feature) {
+        var centroid = getCentroidOfFeature(feature);
+        if (centroid) {
+          // Add deterministic small jitter if multiple reports in same barangay
+          if (seed != null && String(seed) !== '') {
+            var h2 = hash32(seed);
+            var ang2 = (h2 % 360) * (Math.PI / 180);
+            var rad2 = 0.0004 * ((h2 % 3) + 1);
+            centroid[0] += rad2 * Math.cos(ang2);
+            centroid[1] += (rad2 * Math.sin(ang2)) / Math.cos(centroid[0] * Math.PI / 180);
+          }
+          return centroid;
+        }
+      }
+    }
+
+    // 2. Original fallback: generic offset around municipality center
     var muni = getMunicipalityByName(municipalityName) || getMunicipalityByKey(municipalityName);
     if (!muni) return null;
     var baseLat = Number(muni.lat), baseLng = Number(muni.lng);
