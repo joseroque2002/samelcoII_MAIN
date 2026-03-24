@@ -158,6 +158,51 @@ document.addEventListener('DOMContentLoaded', function () {
     municipalities.forEach(function(m) {
       L.marker([m.lat, m.lng], { icon: customIcon }).addTo(map);
     });
+
+    // Render Coverage GeoJSON if available
+    if (window.SAMELCO_COVERAGE_GEOJSON) {
+      L.geoJSON(window.SAMELCO_COVERAGE_GEOJSON, {
+        style: function(feature) {
+          return {
+            color: '#8b2a2a',
+            weight: 1.5,
+            opacity: 0.6,
+            fillColor: '#8b2a2a',
+            fillOpacity: 0.05
+          };
+        },
+        onEachFeature: function(feature, layer) {
+          if (feature.properties) {
+            var props = feature.properties;
+            var popupContent = '<div class="map-popup-content">' +
+              '<h4 style="margin:0 0 8px; color:#8b2a2a; border-bottom:1px solid #eee; padding-bottom:4px;">' + (props.NAME_3 || 'Unknown Barangay') + '</h4>' +
+              '<p style="margin:4px 0;"><strong>Municipality:</strong> ' + (props.NAME_2 || 'N/A') + '</p>' +
+              '</div>';
+            layer.bindPopup(popupContent);
+            
+            layer.on({
+              mouseover: function(e) {
+                var l = e.target;
+                l.setStyle({
+                  weight: 3,
+                  opacity: 1,
+                  fillOpacity: 0.2
+                });
+              },
+              mouseout: function(e) {
+                var l = e.target;
+                l.setStyle({
+                  weight: 1.5,
+                  opacity: 0.6,
+                  fillOpacity: 0.05
+                });
+              }
+            });
+          }
+        }
+      }).addTo(map);
+    }
+
     var group = new L.featureGroup(map._layers);
     map.fitBounds(group.getBounds().pad(0.1));
     window.map = map;
